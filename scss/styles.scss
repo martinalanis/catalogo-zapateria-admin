@@ -1,0 +1,53 @@
+body, html {
+  overflow-x: hidden;
+  overflow-y: auto!important;
+}
+.theme--light.v-application {
+  background: #f3f6fb!important;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.header-logo {
+  width: 110px;
+  padding: 15px;
+  background: #FFF;
+  border-radius: 15px;
+  margin: 0 auto 20px;
+  img {
+    width: 100%;
+    display: block;
+  }
+}
+
+.app-bar-logo {
+  width: 50px;
+  height: 100%;
+  padding: 2px;
+  background-color: #FFF;
+  border-radius: 5px;
+}
+
+.img-block {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.menu {
+  a {
+    text-decoration: none;
+    text-transform: uppercase;
+    margin: 0 0.5em;
+    color: #111!important;
+    letter-spacing: 1px;
+    font-weight: 500;
+    // font-size: 0.9em;
+    &:hover {
+      color: $yellow-c!important;
+    }
+  }
+}

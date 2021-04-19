@@ -12,24 +12,35 @@ export default {
     titleTemplate: '%s - AdminPanel',
     title: 'AdminPanel',
     htmlAttrs: {
-      lang: 'en',
+      lang: 'es',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/png', href: '/logo.png' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: [
+    '~scss/styles.scss'
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
+
+  env: {
+    urlApi: process.env.NODE_ENV !== 'production'
+      ? process.env.URL_API
+      : 'https://api.zapateriasdleon.com/api',
+    imgPath: process.env.NODE_ENV !== 'production'
+      ? process.env.IMG_PATH
+      : 'https://api.zapateriasdleon.com/img'
+  },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -43,16 +54,60 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
 
+  router: {
+    middleware: ['auth']
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    credentials: true,
+    baseUrl: process.env.NODE_ENV !== 'production'
+      ? process.env.URL_API
+      : 'https://api.zapateriasdleon.com/api'
+  },
+
+  auth: {
+    strategies: {
+      laravelSanctum: {
+        provider: 'laravel/sanctum',
+        url: process.env.NODE_ENV !== 'production'
+          ? 'http://localhost/zapateria/api/public'
+          : 'https://api.zapateriasdleon.com',
+        // user endpoint uses packages defaults https://github.com/nuxt-community/auth-module/blob/dev/src/providers/laravel-sanctum.ts
+        endpoints: {
+          login: {
+            url: '/api/login'
+          },
+          logout: {
+            url: '/api/logout'
+          },
+          user: {
+            url: '/api/user'
+          }
+        },
+        user: {
+          property: false
+        }
+      }
+    },
+    redirect: {
+      // If user not logged en requires redirecto to
+      login: '/login',
+      // redirect after logout
+      logout: '/login',
+      // if user loggedIn go to home
+      home: '/'
+    }
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,

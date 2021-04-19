@@ -1,10 +1,7 @@
 <template>
   <v-app>
-    <LayoutHeader/>
-    <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
+    <v-main class="bg-login">
+      <nuxt/>
     </v-main>
   </v-app>
 </template>
@@ -14,3 +11,9 @@ export default {
   name: 'LayoutDefault'
 }
 </script>
+
+<style lang="scss" scoped>
+.bg-login {
+  background: #212121;
+}
+</style>
