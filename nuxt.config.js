@@ -54,7 +54,8 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    '@nuxtjs/dayjs'
   ],
 
   router: {
@@ -101,6 +102,16 @@ export default {
       // if user loggedIn go to home
       home: '/'
     }
+  },
+
+  dayjs: {
+    locales: ['es'],
+    defaultLocale: 'es',
+    defaultTimeZone: 'America/Mexico_City',
+    plugins: [
+      'utc', // import 'dayjs/plugin/utc'
+      'timezone' // import 'dayjs/plugin/timezone'
+    ]
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

@@ -103,6 +103,11 @@ export default {
       categories: [
         {
           // icon: 'mdi-chart-bubble',
+          title: 'Inicio',
+          to: '/'
+        },
+        {
+          // icon: 'mdi-chart-bubble',
           title: 'Vendedores',
           to: '/vendedores'
         }
