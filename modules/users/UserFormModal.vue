@@ -34,6 +34,7 @@
               <v-text-field
                 v-model.trim="user.phone"
                 label="Teléfono"
+                :error="phoneError"
                 :rules="validations.ruleTelephone"
                 :error-count="2"
                 :loading="loading"
@@ -97,6 +98,21 @@
               </p>
             </v-col>
           </v-row>
+          <v-row v-if="errorMessage">
+            <v-col>
+              <v-alert
+                color="red"
+                border="left"
+                class="grey lighten-5"
+                colored-border
+                dense
+                elevation="1"
+                icon="mdi-exclamation"
+              >
+                <span v-html="errorMessage"></span>
+              </v-alert>
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-card-actions class="px-3 pb-3">
           <v-spacer></v-spacer>
@@ -148,7 +164,9 @@ export default {
       loadingButton: false,
       showPassword: false,
       emailError: false,
+      phoneError: false,
       user: new Vendedor(),
+      errorMessage: '',
       validations: {
         req: [
           value => !!value || 'Campo requerido.'
@@ -160,30 +178,6 @@ export default {
             return pattern.test(value) || 'Formato no válido.'
           }
         ],
-        // ruleAlphaDot: [
-        //   value => !!value || 'Campo requerido.',
-        //   value => {
-        //     const pattern = /^[A-Za-z0-9]*[A-Za-z0-9(.)?][A-Za-z0-9(.)?(\-)?\s]*$/
-        //     return pattern.test(value) || 'Formato no válido.'
-        //   }
-        // ],
-        // ruleAddress: [
-        //   value => !!value || 'Campo requerido.',
-        //   value => {
-        //     const pattern = /^[A-Za-z0-9]*[A-Za-z0-9(.)?][A-Za-z0-9(.)?(#)?(\-)?\s]*$/
-        //     return pattern.test(value) || 'Formato no válido.'
-        //   }
-        // ],
-        // ruleCp: [
-        //   value => !!value || 'Campo requerido.',
-        //   value => {
-        //     if (value.length) {
-        //       const pattern = /^[0-9]{5}$/
-        //       return pattern.test(value) || 'CP no válido.'
-        //     }
-        //     return false
-        //   }
-        // ],
         ruleTelephone: [
           value => !!value || 'Campo requerido.',
           value => (value || '').length <= 10 || 'Max 10 caracteres',
@@ -192,17 +186,9 @@ export default {
             return pattern.test(value) || 'Ingresa solo números.'
           }
         ],
-        // ruleNumber: [
-        //   value => !!value || 'Campo requerido.',
-        //   value => {
-        //     const pattern = /^[0-9]+$/
-        //     return pattern.test(value) || 'Ingresa solo números.'
-        //   }
-        // ],
         ruleEmail: [
           value => !!value || 'Campo requerido.',
           value => {
-            // const pattern = /^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$/
             const pattern = /^[a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,15})$/
             return pattern.test(value) || 'Email no válido.'
           }
@@ -214,27 +200,7 @@ export default {
       }
     }
   },
-  // computed: {
-  // },
   methods: {
-    // async edit (id) {
-    //   this.loading = true
-    //   this.disableButton = true
-    //   // this.user = new User()
-    //   this.openModal(true)
-    //   // console.log('id', id)
-    //   try {
-    //     const usuario = await api.get(`/users/${id}`)
-    //     this.user = usuario.data
-    //     this.loading = false
-    //     this.disableButton = false
-    //   } catch (error) {
-    //     this.loading = false
-    //     this.disableButton = false
-    //     this.user = new User()
-    //     this.$store.dispatch('notify', { success: false, message: error.response.data })
-    //   }
-    // },
     edit (item) {
       this.openModal(true)
       this.user = { ...item }
@@ -249,9 +215,7 @@ export default {
       this.dialog = true
       this.editMode = edit
       this.emailError = false
-      // setTimeout(() => {
-      //   this.$refs.form.resetValidation()
-      // }, 100)
+      this.phoneError = false
     },
     closeModal () {
       this.user = new Vendedor()
@@ -259,6 +223,7 @@ export default {
       this.disableButton = false
       this.loading = false
       this.emailError = false
+      this.phoneError = false
       setTimeout(() => {
         this.$refs.form.resetValidation()
       }, 100)
@@ -266,29 +231,45 @@ export default {
     },
     async save () {
       if (this.$refs.form.validate()) {
-        console.log('save')
         this.loadingButton = true
         try {
           const res = this.editMode
             ? await this.$axios.put(`/users/${this.user.id}`, this.user)
             : await this.$axios.post('/users', this.user)
-          if (res.status === 200) {
-            // this.$store.dispatch('notify', { success: true, message: res.data })
-            this.$emit('reloadTable')
-            this.closeModal()
+          this.$store.dispatch('notify', { success: true, message: res.data })
+          this.loadingButton = false
+          this.$emit('reloadTable')
+          this.closeModal()
+        } catch ({ response: { data } }) {
+          if (data.errors) {
+            this.errorHandler(data.errors)
+          } else {
+            console.log(data)
           }
           this.loadingButton = false
-          this.vendedor = new Vendedor()
-        } catch (error) {
-          if (error.response.data.errors?.email) {
-            this.emailError = true
-          }
-          this.loadingButton = false
-          // this.$store.dispatch('notify', { success: false, message: error.response.data })
+          this.$store.dispatch('notify', { success: false, message: data })
         }
       } else {
         // this.$store.dispatch('notify', { success: false, message: { message: 'Completa los campos requeridos' } })
       }
+    },
+    errorHandler ({ email, phone }) {
+      const msg = []
+      if (email) {
+        this.emailError = true
+        msg.push(`- ${email.join('')}`)
+      } else {
+        this.emailError = false
+      }
+
+      if (phone) {
+        this.phoneError = true
+        msg.push(`- ${phone.join('')}`)
+      } else {
+        this.phoneError = false
+      }
+
+      this.errorMessage = msg.join('<br>')
     }
   }
 }

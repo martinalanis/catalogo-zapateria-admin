@@ -78,10 +78,10 @@
               <v-divider></v-divider>
               <v-list-item
                 link
-                class="px-2 py-0 v_list_dense-h red-text"
-                @click="$refs.confirmModal.openModal(`/users/${item.id}`)"
+                class="px-2 py-0 v_list_dense-h"
+                @click="$refs.confirmModal.openModal(item.id)"
               >
-                <v-list-item-title class="caption red">Eliminar</v-list-item-title>
+                <v-list-item-title class="caption red--text">Eliminar</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -94,15 +94,15 @@
       </template>
     </v-data-table>
     <user-form ref="vendedorForm" :roles="roles" @reloadTable="fetch"/>
-    <!-- <confirm-modal ref="confirmModal" @reloadTable="fetch"/> -->
+    <admin-confirm-modal ref="confirmModal" @confirmed="remove"/>
     <!-- <change-password-modal ref="changePasswordModal" @reloadTable="fetch"/> -->
   </div>
 </template>
 
 <script>
+import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
 import UserForm from './UserFormModal'
 import UserDetails from './UserDetails'
-// import ConfirmModal from '@/components/ui/AdminConfirmModal'
 // import ChangePasswordModal from './ChangePasswordModal'
 // import { mapGetters } from 'vuex'
 
@@ -110,7 +110,7 @@ export default {
   name: 'VendedoresTable',
   components: {
     // ChangePasswordModal,
-    // ConfirmModal,
+    AdminConfirmModal,
     UserDetails,
     UserForm
   },
@@ -165,8 +165,8 @@ export default {
           statusColor: us.status ? 'success' : 'disabled',
           // rol: us.role.name || '',
           // rolColor: this.getRolColor(us.role.id),
-          createdAt: this.$dayjs.tz(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
-          lastModified: this.$dayjs.tz(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
+          createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
+          lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
         }
       })
     }
@@ -181,11 +181,21 @@ export default {
         this.usuariosData = await this.$axios.get(`/users?type=${this.type}`).then(res => res.data)
         this.roles = await this.$axios.get('/roles').then(res => res.data)
         this.loading = false
-      } catch (error) {
+      } catch ({ response: { data: { message } } }) {
         this.loading = false
-        console.log(error)
-        // this.$store.dispatch('notify', { success: false, message: error.response.data })
+        // console.log(error)
+        this.$store.dispatch('notify', { success: false, message })
       }
+    },
+    async remove (id) {
+      try {
+        const message = await this.$axios.delete(`/users/${id}`).then(r => r.data)
+        this.$store.dispatch('notify', { success: true, message })
+        this.fetch()
+      } catch ({ response: { data: { message } } }) {
+        this.$store.dispatch('notify', { success: false, message })
+      }
+      console.log('remove', id)
     }
     // getRolColor (id) {
     //   switch (id) {

@@ -72,10 +72,11 @@
       </template>
     </v-navigation-drawer>
     <v-app-bar
+      dark
       absolute
       app
       flat
-      color="#fff"
+      color="#212121"
       elevation="1"
     >
       <nuxt-link to="/home" class="app-bar-logo">
@@ -88,6 +89,15 @@
           :key="i"
           :to="item.to"
         >{{ item.title }}</nuxt-link>
+        <v-btn
+          dark
+          small
+          color="amber darken-3"
+          @click="$auth.logout()"
+        >
+          Salir
+          <v-icon right>mdi-logout</v-icon>
+        </v-btn>
       </nav>
       <v-app-bar-nav-icon class="d-block d-md-none" @click.stop="drawer = !drawer" />
     </v-app-bar>
