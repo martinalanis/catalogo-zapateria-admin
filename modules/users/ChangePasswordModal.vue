@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import api from '@/api'
-
 export default {
   name: 'ChangePasswordModal',
   data () {
@@ -66,13 +64,13 @@ export default {
       if (this.$refs.form.validate()) {
         this.loading = true
         try {
-          const res = await api.post(`/change-password/${this.id}`, { password: this.password })
-          this.$store.dispatch('notify', { success: true, message: res.data })
+          const message = await this.$axios.post(`/change-password/${this.id}`, { password: this.password }).then(r => r.data)
+          this.$store.dispatch('notify', { success: true, message })
           this.$emit('reloadTable')
           this.closeModal()
-        } catch (error) {
+        } catch ({ response: { data: { message } } }) {
           this.loading = false
-          this.$store.dispatch('notify', { success: false, message: error.response.data })
+          this.$store.dispatch('notify', { success: false, message })
         }
       }
     },

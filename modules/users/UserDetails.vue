@@ -7,10 +7,6 @@
           <small class="text--secondary">NOMBRE</small><br>
           {{ user.name }}
         </p>
-        <!-- <p>
-          <small class="text--secondary">RFC</small><br>
-          {{ user.rfc }}
-        </p> -->
         <div>
           <div class="d-inline-block mr-6">
             <p class="d-inline-block mr-3"><small class="text--secondary">ROL</small></p>
@@ -46,24 +42,6 @@
           <small class="text--secondary">TEÉFONO</small><br>
           {{ user.phone }}
         </p>
-        <!-- <p>
-          <small class="text--secondary">DIRECCIÓN</small><br>
-          {{ user.direccion }}
-        </p>
-        <div>
-          <p class="d-inline-block mr-6">
-            <small class="text--secondary">CP</small><br>
-            {{ user.cp }}
-          </p>
-          <p class="d-inline-block mr-6">
-            <small class="text--secondary">ESTADO</small><br>
-            {{ user.estado }}
-          </p>
-          <p class="d-inline-block">
-            <small class="text--secondary">MUNICIPIO</small><br>
-            {{ user.municipio }}
-          </p>
-        </div> -->
       </v-col>
     </v-row>
   </v-container>

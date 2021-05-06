@@ -203,7 +203,12 @@ export default {
   methods: {
     edit (item) {
       this.openModal(true)
-      this.user = { ...item }
+      this.user = {
+        ...item,
+        role_id: parseInt(item.role_id),
+        status: parseInt(item.status)
+      }
+      console.log(this.user)
     },
     add () {
       this.loading = false

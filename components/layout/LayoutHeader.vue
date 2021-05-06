@@ -11,10 +11,15 @@
     >
       <template #prepend>
         <v-row justify="center">
-          <v-col class="my-5">
-            <header class="header-logo elevation-2 mt-4">
+          <v-col>
+            <header class="header-logo elevation-2 mt-6">
               <img src="~/assets/logo.webp" alt="Zapaterias de León">
             </header>
+          </v-col>
+          <v-col cols="12" class="py-0">
+            <p class="grey--text text--lighten-2 text-capitalize text-center mb-0">
+              {{ $auth.user.name.split(' ')[0] }}
+            </p>
           </v-col>
         </v-row>
       </template>
@@ -43,9 +48,6 @@
             router
             exact
           >
-            <!-- <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action> -->
             <v-list-item-content>
               <v-list-item-title v-text="item.title" />
             </v-list-item-content>
@@ -58,7 +60,7 @@
             <v-btn
               dark
               depressed
-              color="purple darken-4"
+              color="amber darken-3"
               block
               tile
               large
@@ -83,12 +85,18 @@
         <img src="~/assets/logo.webp" alt="Zapaterias de León" class="img-block">
       </nuxt-link>
       <v-spacer></v-spacer>
-      <nav class="menu">
+      <nav class="menu d-none d-md-block">
         <nuxt-link
           v-for="(item, i) in categories"
           :key="i"
           :to="item.to"
         >{{ item.title }}</nuxt-link>
+        <div class="d-inline-block mr-3 grey--text text--lighten-2">
+          <span class="mr-2">|</span>
+          <small class="text-capitalize">
+            {{ $auth.user.name.split(' ')[0] }}
+          </small>
+        </div>
         <v-btn
           dark
           small
@@ -115,6 +123,10 @@ export default {
           // icon: 'mdi-chart-bubble',
           title: 'Inicio',
           to: '/'
+        },
+        {
+          title: 'Productos',
+          to: '/productos'
         },
         {
           // icon: 'mdi-chart-bubble',

@@ -11,7 +11,7 @@
           @click="$refs.vendedorForm.add()"
         >
           <v-icon left small>mdi-account</v-icon>
-          agregar vendedor
+          agregar producto
         </v-btn>
         <v-btn
           dark
@@ -29,7 +29,7 @@
       <v-col cols="auto" md="7">
         <v-text-field
           v-model="search"
-          label="Buscar en vendedores"
+          label="Buscar en productos"
           prepend-inner-icon="mdi-magnify"
           hide-details
           clearable
@@ -39,17 +39,20 @@
     </v-row>
     <v-data-table
       :headers="headers"
-      :items="usuarios"
+      :items="products"
       :loading="loading"
       :search="search"
-      sort-by="name"
+      sort-by="marca"
       show-expand
       single-expand
       class="elevation-2"
+      @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
     >
-      <!-- <template #[`item.role.name`]="{ item }">
-        <v-chip label small :color="item.rolColor">{{ item.role.name }}</v-chip>
-      </template> -->
+      <template #[`item.imagen`]="{ item }">
+        <v-avatar rounded class="elevation-2 my-2">
+          <img :src="item.imagen" alt="">
+        </v-avatar>
+      </template>
       <template #[`item.status`]="{ item }">
         <v-chip label small :color="item.statusColor">
           {{ item.statusText }}
@@ -63,7 +66,15 @@
             color="primary"
             @click="$refs.vendedorForm.edit(item)"
           >editar</v-btn>
-          <v-menu left offset-y offset-x :nudge-right="10">
+          <v-btn
+            x-small
+            color="red"
+            text
+            @click.stop="remove"
+          >
+            eliminar
+          </v-btn>
+          <!-- <v-menu left offset-y offset-x :nudge-right="10">
             <template #activator="{ on }">
               <v-icon v-on="on">mdi-dots-vertical</v-icon>
             </template>
@@ -84,34 +95,35 @@
                 <v-list-item-title class="caption red--text">Eliminar</v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-menu>
+          </v-menu> -->
         </div>
       </template>
       <template #expanded-item="{ item }">
         <td :colspan="headers.length">
-          <user-details :user="item"/>
+          {{ item }}
+          <!-- <user-details :user="item"/> -->
         </td>
       </template>
     </v-data-table>
-    <user-form ref="vendedorForm" :roles="roles" @reloadTable="fetch"/>
+    <!-- <user-form ref="vendedorForm" :roles="roles" @reloadTable="fetch"/>
     <admin-confirm-modal ref="confirmModal" @confirmed="remove"/>
-    <change-password-modal ref="changePasswordModal" @reloadTable="fetch"/>
+    <change-password-modal ref="changePasswordModal" @reloadTable="fetch"/> -->
   </div>
 </template>
 
 <script>
-import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
-import UserForm from './UserFormModal'
-import UserDetails from './UserDetails'
-import ChangePasswordModal from './ChangePasswordModal'
+// import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
+// import UserForm from './UserFormModal'
+// import UserDetails from './UserDetails'
+// import ChangePasswordModal from './ChangePasswordModal'
 
 export default {
-  name: 'VendedoresTable',
+  name: 'ProductosTable',
   components: {
-    ChangePasswordModal,
-    AdminConfirmModal,
-    UserDetails,
-    UserForm
+    // ChangePasswordModal,
+    // AdminConfirmModal,
+    // UserDetails,
+    // UserForm
   },
   props: {
     type: {
@@ -121,30 +133,32 @@ export default {
   },
   data () {
     return {
-      filter: 'todos',
-      roles: [],
-      usuariosData: [],
+      productsData: [],
       headers: [
         {
-          text: 'Nombre',
-          value: 'name'
+          text: 'Imagen',
+          value: 'imagen'
         },
         {
-          text: 'Email',
-          value: 'email'
+          text: 'Marca',
+          value: 'marca'
         },
         {
-          text: 'Telefono',
-          value: 'phone'
+          text: 'Modelo',
+          value: 'modelo'
+        },
+        {
+          text: 'Color',
+          value: 'color'
+        },
+        {
+          text: 'Numeración',
+          value: 'numeracion'
         },
         // {
-        //   text: 'Rol',
-        //   value: 'role.name'
+        //   text: 'Material',
+        //   value: 'material'
         // },
-        {
-          text: 'Estatus',
-          value: 'status'
-        },
         {
           text: '',
           value: 'id',
@@ -156,14 +170,11 @@ export default {
     }
   },
   computed: {
-    usuarios () {
-      return this.usuariosData.map(us => {
+    products () {
+      return this.productsData.map(us => {
         return {
           ...us,
-          statusText: us.status ? 'activo' : 'inactivo',
-          statusColor: us.status ? 'success' : 'disabled',
-          // rol: us.role.name || '',
-          // rolColor: this.getRolColor(us.role.id),
+          imagen: `${process.env.imgPath}/${us.imagen}`,
           createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
           lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
         }
@@ -177,23 +188,27 @@ export default {
     async fetch () {
       this.loading = true
       try {
-        this.usuariosData = await this.$axios.get(`/users?type=${this.type}`).then(res => res.data)
-        this.roles = await this.$axios.get('/roles').then(res => res.data)
+        this.productsData = await this.$axios.get('/products').then(res => res.data)
+        console.log(this.productsData)
+        console.log(process.env)
         this.loading = false
       } catch ({ response: { data: { message } } }) {
         this.loading = false
         this.$store.dispatch('notify', { success: false, message })
       }
     },
-    async remove (id) {
-      try {
-        const message = await this.$axios.delete(`/users/${id}`).then(r => r.data)
-        this.$store.dispatch('notify', { success: true, message })
-        this.fetch()
-      } catch ({ response: { data: { message } } }) {
-        this.$store.dispatch('notify', { success: false, message })
-      }
-      console.log('remove', id)
+    // async remove (id) {
+    //   try {
+    //     const message = await this.$axios.delete(`/users/${id}`).then(r => r.data)
+    //     this.$store.dispatch('notify', { success: true, message })
+    //     this.fetch()
+    //   } catch ({ response: { data: { message } } }) {
+    //     this.$store.dispatch('notify', { success: false, message })
+    //   }
+    //   console.log('remove', id)
+    // }
+    remove () {
+      console.log('remove')
     }
     // getRolColor (id) {
     //   switch (id) {

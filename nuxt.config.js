@@ -81,7 +81,7 @@ export default {
         // user endpoint uses packages defaults https://github.com/nuxt-community/auth-module/blob/dev/src/providers/laravel-sanctum.ts
         endpoints: {
           login: {
-            url: '/api/login'
+            url: '/api/admin/login'
           },
           logout: {
             url: '/api/logout'
