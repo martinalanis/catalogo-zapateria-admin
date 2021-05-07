@@ -46,6 +46,7 @@
       show-expand
       single-expand
       class="elevation-2"
+      @click:row="(item, slot) => slot.expand(!slot.isExpanded)"
     >
       <!-- <template #[`item.role.name`]="{ item }">
         <v-chip label small :color="item.rolColor">{{ item.role.name }}</v-chip>
@@ -61,7 +62,7 @@
             text
             x-small
             color="primary"
-            @click="$refs.vendedorForm.edit(item)"
+            @click.stop="$refs.vendedorForm.edit(item)"
           >editar</v-btn>
           <v-menu left offset-y offset-x :nudge-right="10">
             <template #activator="{ on }">
@@ -71,7 +72,7 @@
               <v-list-item
                 link
                 class="px-2 py-0 v_list_dense-h"
-                @click="$refs.changePasswordModal.openModal(item.id)"
+                @click.stop="$refs.changePasswordModal.openModal(item.id)"
               >
                 <v-list-item-title class="caption">Cambiar contraseña</v-list-item-title>
               </v-list-item>
@@ -79,7 +80,7 @@
               <v-list-item
                 link
                 class="px-2 py-0 v_list_dense-h"
-                @click="$refs.confirmModal.openModal(item.id)"
+                @click.stop="$refs.confirmModal.openModal(item.id)"
               >
                 <v-list-item-title class="caption red--text">Eliminar</v-list-item-title>
               </v-list-item>

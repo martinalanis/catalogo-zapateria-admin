@@ -99,9 +99,8 @@
         </div>
       </template>
       <template #expanded-item="{ item }">
-        <td :colspan="headers.length">
-          {{ item }}
-          <!-- <user-details :user="item"/> -->
+        <td :colspan="headers.length + 1">
+          <product-details :product="item"/>
         </td>
       </template>
     </v-data-table>
@@ -114,7 +113,7 @@
 <script>
 // import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
 // import UserForm from './UserFormModal'
-// import UserDetails from './UserDetails'
+import ProductDetails from './ProductDetails'
 // import ChangePasswordModal from './ChangePasswordModal'
 
 export default {
@@ -122,7 +121,7 @@ export default {
   components: {
     // ChangePasswordModal,
     // AdminConfirmModal,
-    // UserDetails,
+    ProductDetails
     // UserForm
   },
   props: {
@@ -155,10 +154,6 @@ export default {
           text: 'Numeración',
           value: 'numeracion'
         },
-        // {
-        //   text: 'Material',
-        //   value: 'material'
-        // },
         {
           text: '',
           value: 'id',
@@ -175,6 +170,9 @@ export default {
         return {
           ...us,
           imagen: `${process.env.imgPath}/${us.imagen}`,
+          precioPublico: us.precio_publico,
+          precioProveedor: us.precio_proveedor,
+          tipoZapato: us.tipo_zapato,
           createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
           lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
         }
