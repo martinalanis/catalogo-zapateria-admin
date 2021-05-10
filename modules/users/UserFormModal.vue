@@ -10,16 +10,14 @@
       <v-card>
         <div class="modal_header_icon blue elevation-6">
           <v-icon x-large color="#FFF">mdi-account</v-icon>
-          <!-- <img src="@/assets/user2.png" alt="" style="width:70px;"> -->
         </div>
         <v-card-title>
-          <p class="title form_title">
-            <span v-if="editMode">EDITAR</span>
-            <span v-else>NUEVO</span>
-            USUARIO
+          <p class="title form_title text-uppercase">
+            <span v-if="editMode">editar</span>
+            <span v-else>nuevo</span>
+            {{ type }}
           </p>
         </v-card-title>
-        <!-- <v-divider></v-divider> -->
         <v-card-text class="relative">
           <v-row>
             <v-col cols="12" class="py-1">
@@ -141,7 +139,7 @@
 </template>
 
 <script>
-import { Vendedor } from '@/interfaces'
+import User from '@/interfaces'
 
 export default {
   name: 'UserFormModal',
@@ -152,7 +150,7 @@ export default {
     },
     type: {
       type: String,
-      default: ''
+      default: 'administrador'
     }
   },
   data () {
@@ -165,7 +163,7 @@ export default {
       showPassword: false,
       emailError: false,
       phoneError: false,
-      user: new Vendedor(),
+      user: { ...User[this.type] },
       errorMessage: '',
       validations: {
         req: [
@@ -213,8 +211,9 @@ export default {
     add () {
       this.loading = false
       this.disableButton = false
-      this.user = new Vendedor()
+      this.user = { ...User[this.type] }
       this.openModal()
+      this.$refs.form.resetValidation()
     },
     openModal (edit = false) {
       this.dialog = true
@@ -223,7 +222,7 @@ export default {
       this.phoneError = false
     },
     closeModal () {
-      this.user = new Vendedor()
+      this.user = { ...User[this.type] }
       this.editMode = false
       this.disableButton = false
       this.loading = false

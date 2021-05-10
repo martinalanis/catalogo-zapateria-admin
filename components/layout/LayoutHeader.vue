@@ -120,7 +120,6 @@ export default {
       drawer: null,
       categories: [
         {
-          // icon: 'mdi-chart-bubble',
           title: 'Inicio',
           to: '/'
         },
@@ -129,9 +128,12 @@ export default {
           to: '/productos'
         },
         {
-          // icon: 'mdi-chart-bubble',
           title: 'Vendedores',
           to: '/vendedores'
+        },
+        {
+          title: 'Administradores',
+          to: '/administradores'
         }
       ],
       miniVariant: false

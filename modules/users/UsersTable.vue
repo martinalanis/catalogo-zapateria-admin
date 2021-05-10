@@ -8,10 +8,10 @@
           outlined
           color="blue darken-4"
           class="d-none d-md-block caption"
-          @click="$refs.vendedorForm.add()"
+          @click="$refs.userForm.add()"
         >
           <v-icon left small>mdi-account</v-icon>
-          agregar vendedor
+          agregar {{ type }}
         </v-btn>
         <v-btn
           dark
@@ -19,7 +19,7 @@
           small
           color="purple"
           class="d-block d-md-none"
-          @click="$refs.vendedorForm.add()"
+          @click="$refs.userForm.add()"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -62,7 +62,7 @@
             text
             x-small
             color="primary"
-            @click.stop="$refs.vendedorForm.edit(item)"
+            @click.stop="$refs.userForm.edit(item)"
           >editar</v-btn>
           <v-menu left offset-y offset-x :nudge-right="10">
             <template #activator="{ on }">
@@ -94,9 +94,20 @@
         </td>
       </template>
     </v-data-table>
-    <user-form ref="vendedorForm" :roles="roles" @reloadTable="fetch"/>
-    <admin-confirm-modal ref="confirmModal" @confirmed="remove"/>
-    <change-password-modal ref="changePasswordModal" @reloadTable="fetch"/>
+    <user-form
+      ref="userForm"
+      :roles="roles"
+      :type="type"
+      @reloadTable="fetch"
+    />
+    <admin-confirm-modal
+      ref="confirmModal"
+      @confirmed="remove"
+    />
+    <change-password-modal
+      ref="changePasswordModal"
+      @reloadTable="fetch"
+    />
   </div>
 </template>
 
@@ -117,7 +128,7 @@ export default {
   props: {
     type: {
       type: String,
-      default: ''
+      default: 'administrador'
     }
   },
   data () {
