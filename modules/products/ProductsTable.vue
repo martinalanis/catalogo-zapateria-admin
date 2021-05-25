@@ -42,6 +42,9 @@
       :items="products"
       :loading="loading"
       :search="search"
+      :options.sync="options"
+      :server-items-length="totalProducts"
+      :footer-props="footerProps"
       sort-by="marca"
       show-expand
       single-expand
@@ -136,7 +139,9 @@ export default {
       headers: [
         {
           text: 'Imagen',
-          value: 'imagen'
+          value: 'imagen',
+          sortable: false,
+          filterable: false
         },
         {
           text: 'Marca',
@@ -160,6 +165,15 @@ export default {
           sortable: false
         }
       ],
+      options: {
+        page: 1,
+        itemsPerPage: 10,
+        sortBy: ['marca']
+      },
+      footerProps: {
+        itemsPerPageOptions: [5, 10, 25, 50]
+      },
+      totalProducts: 0,
       search: '',
       loading: false
     }
@@ -179,16 +193,31 @@ export default {
       })
     }
   },
-  created () {
+  watch: {
+    options: {
+      async handler () {
+        await this.fetch()
+      },
+      deep: true
+    }
+  },
+  mounted () {
     this.fetch()
   },
   methods: {
     async fetch () {
       this.loading = true
       try {
-        this.productsData = await this.$axios.get('/products').then(res => res.data)
-        console.log(this.productsData)
-        console.log(process.env)
+        const query = [
+          `page=${this.options.page}`,
+          `limit=${this.options.itemsPerPage}`
+        ]
+
+        this.options.sortBy[0] && query.push(`orderBy=${this.options.sortBy[0]}`)
+        this.options.sortDesc[0] && query.push(`orderDesc=${this.options.sortDesc[0]}`)
+        const res = await this.$axios.get(`/products?${query.join('&')}`).then(res => res.data)
+        this.totalProducts = res.total
+        this.productsData = res.data
         this.loading = false
       } catch ({ response: { data: { message } } }) {
         this.loading = false
