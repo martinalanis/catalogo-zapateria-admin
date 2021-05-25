@@ -27,14 +27,28 @@
     </v-row>
     <v-row class="align-center mb-2">
       <v-col cols="auto" md="7">
-        <v-text-field
-          v-model="search"
-          label="Buscar en productos"
-          prepend-inner-icon="mdi-magnify"
-          hide-details
-          clearable
-          solo
-        />
+        <v-form lazy @submit.prevent="fetch">
+          <v-text-field
+            v-model="search"
+            label="Buscar en productos"
+            hide-details
+            clearable
+            solo
+            @click:clear="resetSearch"
+          >
+            <v-btn
+              slot="append"
+              icon
+              type="submit"
+            >
+              <v-icon>
+                mdi-magnify
+              </v-icon>
+            </v-btn>
+          </v-text-field>
+        </v-form>
+        <!-- <v-form class="d-flex" lazy @submit.prevent="fetch">
+        </v-form> -->
       </v-col>
     </v-row>
     <v-data-table
@@ -215,6 +229,8 @@ export default {
 
         this.options.sortBy[0] && query.push(`orderBy=${this.options.sortBy[0]}`)
         this.options.sortDesc[0] && query.push(`orderDesc=${this.options.sortDesc[0]}`)
+        this.search && query.push(`search=${this.search}`)
+
         const res = await this.$axios.get(`/products?${query.join('&')}`).then(res => res.data)
         this.totalProducts = res.total
         this.productsData = res.data
@@ -236,6 +252,10 @@ export default {
     // }
     remove () {
       console.log('remove')
+    },
+    async resetSearch () {
+      this.search = ''
+      await this.fetch()
     }
     // getRolColor (id) {
     //   switch (id) {
