@@ -24,6 +24,7 @@
               <v-text-field
                 v-model.trim="user.name"
                 label="Nombre"
+                hide-details="auto"
                 :rules="validations.req"
                 :loading="loading"
               />
@@ -32,6 +33,7 @@
               <v-text-field
                 v-model.trim="user.phone"
                 label="Teléfono"
+                hide-details="auto"
                 :error="phoneError"
                 :rules="validations.ruleTelephone"
                 :error-count="2"
@@ -43,6 +45,7 @@
               <v-text-field
                 v-model.trim="user.email"
                 label="Email"
+                hide-details="auto"
                 :error="emailError"
                 :rules="validations.ruleEmail"
                 :loading="loading"
@@ -56,6 +59,7 @@
                 v-model="user.role_id"
                 :items="roles"
                 label="Roles"
+                hide-details="auto"
                 item-text="name"
                 item-value="id"
                 :rules="validations.req"
@@ -69,10 +73,12 @@
               >
                 <v-radio
                   label="Activo"
+                  hide-details="auto"
                   :value="1"
                 ></v-radio>
                 <v-radio
                   label="Inactivo"
+                  hide-details="auto"
                   :value="0"
                 ></v-radio>
               </v-radio-group>
@@ -83,6 +89,7 @@
               <v-text-field
                 v-model.trim="user.password"
                 label="Contraseña"
+                hide-details="auto"
                 :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="validations.passwordRules"
                 :type="showPassword ? 'text' : 'password'"

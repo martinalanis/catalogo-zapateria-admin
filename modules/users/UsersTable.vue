@@ -78,6 +78,7 @@
               </v-list-item>
               <v-divider></v-divider>
               <v-list-item
+                v-if="$auth.user.id !== item.id"
                 link
                 class="px-2 py-0 v_list_dense-h"
                 @click.stop="$refs.confirmModal.openModal(item.id)"

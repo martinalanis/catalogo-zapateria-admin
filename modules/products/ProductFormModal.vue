@@ -24,6 +24,7 @@
               <v-text-field
                 v-model.trim="product.codigo"
                 label="Codigo*"
+                hide-details="auto"
                 :rules="validations.req"
                 :loading="loading"
               />
@@ -32,6 +33,7 @@
               <v-text-field
                 v-model.trim="product.modelo"
                 label="Modelo*"
+                hide-details="auto"
                 :rules="validations.req"
                 :loading="loading"
               />
@@ -40,6 +42,7 @@
               <v-text-field
                 v-model.trim="product.color"
                 label="Color*"
+                hide-details="auto"
                 :rules="validations.req"
                 :loading="loading"
               />
@@ -48,6 +51,7 @@
               <v-text-field
                 v-model.trim="product.material"
                 label="Material"
+                hide-details="auto"
                 :loading="loading"
               />
             </v-col>
@@ -55,6 +59,7 @@
               <v-text-field
                 v-model.trim="product.tipo"
                 label="Tipo*"
+                hide-details="auto"
                 :rules="validations.req"
                 :loading="loading"
               />
@@ -63,6 +68,7 @@
               <v-select
                 v-model.trim="product.categoria"
                 label="Categoria*"
+                hide-details="auto"
                 :items="categories"
                 :rules="validations.req"
                 :loading="loading"
@@ -72,6 +78,7 @@
               <v-text-field
                 v-model.trim="product.numeracion"
                 label="Numeración*"
+                hide-details="auto"
                 :rules="validations.req"
                 :loading="loading"
               />
@@ -82,6 +89,7 @@
               <v-text-field
                 v-model.trim="product.precio_publico"
                 label="Precio público*"
+                hide-details="auto"
                 :loading="loading"
                 type="number"
               />
@@ -90,6 +98,7 @@
               <v-text-field
                 v-model.trim="product.precio_proveedor"
                 label="Precio proveedor*"
+                hide-details="auto"
                 :loading="loading"
                 type="number"
               />
@@ -98,6 +107,7 @@
               <v-text-field
                 v-model.trim="product.precio_descuento"
                 label="Precio descuento*"
+                hide-details="auto"
                 :loading="loading"
                 type="number"
               />
