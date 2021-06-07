@@ -2,27 +2,31 @@
   <div class="py-3">
     <v-row>
       <v-col cols="12" sm="6">
-        <h3 class="px-3 mb-2">{{ product.marca }}</h3>
+        <h3 class="px-3 mb-2">{{ product.codigo }}</h3>
         <div class="rounded-lg overflow-hidden">
-          <img :src="product.imagen" alt="" class="img-block">
+          <img :src="product.imagenUrl" alt="" class="img-block">
         </div>
         <v-simple-table>
           <template #default>
             <tbody>
               <tr>
                 <th class="r_key">Precio regular:</th>
-                <td>$ {{ product.precioPublico }}</td>
+                <td>$ {{ product.precio_publico.toFixed(2) }}</td>
               </tr>
               <tr>
                 <th class="r_key">Precio proveedor:</th>
-                <td>$ {{ product.precioProveedor }}</td>
+                <td>$ {{ product.precio_proveedor.toFixed(2) }}</td>
+              </tr>
+              <tr v-if="product.precio_descuento">
+                <th class="r_key">Precio descuento:</th>
+                <td>$ {{ product.precio_descuento.toFixed(2) }}</td>
               </tr>
             </tbody>
           </template>
         </v-simple-table>
       </v-col>
       <v-col cols="12" sm="6">
-        <h3 class="px-3 mb-2 d-block d-sm-none">{{ product.marca }}</h3>
+        <h3 class="px-3 mb-2 d-block d-sm-none">{{ product.codigo }}</h3>
         <v-simple-table>
           <template #default>
             <tbody>
@@ -48,7 +52,7 @@
               </tr>
               <tr>
                 <th class="r_key">Categoría:</th>
-                <td>{{ product.tipoZapato.toLowerCase() }}</td>
+                <td>{{ product.categoria.toLowerCase() }}</td>
               </tr>
               <tr>
                 <th class="r_key">Fecha creación:</th>

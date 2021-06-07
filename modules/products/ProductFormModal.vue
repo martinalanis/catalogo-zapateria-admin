@@ -3,96 +3,110 @@
     v-model="dialog"
     persistent
     scrollable
-    max-width="600px"
+    max-width="500px"
     content-class="d_content_overflow_visible"
   >
     <v-form v-if="dialog" ref="form" lazy-validation @submit.prevent="save">
       <v-card>
         <div class="modal_header_icon blue elevation-6">
-          <v-icon x-large color="#FFF">mdi-account</v-icon>
+          <v-icon x-large color="#FFF">mdi-shoe-formal</v-icon>
         </div>
         <v-card-title>
           <p class="title form_title text-uppercase">
             <span v-if="editMode">editar</span>
             <span v-else>nuevo</span>
-            {{ type }}
+            Producto
           </p>
         </v-card-title>
         <v-card-text class="relative">
           <v-row>
-            <v-col cols="12">
+            <v-col cols="6">
               <v-text-field
-                v-model.trim="user.name"
-                label="Nombre"
+                v-model.trim="product.codigo"
+                label="Codigo*"
                 :rules="validations.req"
                 :loading="loading"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
-                v-model.trim="user.phone"
-                label="Teléfono"
-                :error="phoneError"
-                :rules="validations.ruleTelephone"
-                :error-count="2"
+                v-model.trim="product.modelo"
+                label="Modelo*"
+                :rules="validations.req"
                 :loading="loading"
-                type="tel"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
-                v-model.trim="user.email"
-                label="Email"
-                :error="emailError"
-                :rules="validations.ruleEmail"
+                v-model.trim="product.color"
+                label="Color*"
+                :rules="validations.req"
                 :loading="loading"
-                type="email"
+              />
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model.trim="product.material"
+                label="Material"
+                :loading="loading"
+              />
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model.trim="product.tipo"
+                label="Tipo*"
+                :rules="validations.req"
+                :loading="loading"
+              />
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                v-model.trim="product.categoria"
+                label="Categoria*"
+                :items="categories"
+                :rules="validations.req"
+                :loading="loading"
+              />
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model.trim="product.numeracion"
+                label="Numeración*"
+                :rules="validations.req"
+                :loading="loading"
               />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="6">
-              <v-select
-                v-model="user.role_id"
-                :items="roles"
-                label="Roles"
-                item-text="name"
-                item-value="id"
-                :rules="validations.req"
-                disabled
+            <v-col cols="4">
+              <v-text-field
+                v-model.trim="product.precio_publico"
+                label="Precio público*"
+                :loading="loading"
+                type="number"
               />
             </v-col>
-            <v-col cols="6">
-              <v-radio-group
-                v-model="user.status"
-                row
-              >
-                <v-radio
-                  label="Activo"
-                  :value="1"
-                ></v-radio>
-                <v-radio
-                  label="Inactivo"
-                  :value="0"
-                ></v-radio>
-              </v-radio-group>
+            <v-col cols="4">
+              <v-text-field
+                v-model.trim="product.precio_proveedor"
+                label="Precio proveedor*"
+                :loading="loading"
+                type="number"
+              />
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model.trim="product.precio_descuento"
+                label="Precio descuento*"
+                :loading="loading"
+                type="number"
+              />
             </v-col>
           </v-row>
           <v-row v-if="!editMode">
-            <v-col cols="6">
-              <v-text-field
-                v-model.trim="user.password"
-                label="Contraseña"
-                :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-                :rules="validations.passwordRules"
-                :type="showPassword ? 'text' : 'password'"
-                hint="Longitud minima 6 caracteres"
-                @click:append="showPassword = !showPassword"
-              />
-            </v-col>
-            <v-col cols="6" class="d-flex align-center justify-end">
-              <p class="mb-0 text-right subtitle-2">
-                <small><i>*Todos los campos son requeridos</i></small>
+            <v-col>
+              <p class="mb-0 subtitle-2">
+                <small><i>*Campos requeridos</i></small>
               </p>
             </v-col>
           </v-row>
@@ -139,21 +153,11 @@
 </template>
 
 <script>
-import User from '@/interfaces/user'
+import Product from '@/interfaces/product'
 import Validations from '@/helpers/validations'
 
 export default {
-  name: 'UserFormModal',
-  props: {
-    roles: {
-      type: Array,
-      default: () => []
-    },
-    type: {
-      type: String,
-      default: 'administrador'
-    }
-  },
+  name: 'ProductFormModal',
   data () {
     return {
       dialog: false,
@@ -161,32 +165,44 @@ export default {
       loading: false,
       disableButton: false,
       loadingButton: false,
-      showPassword: false,
-      emailError: false,
-      phoneError: false,
-      user: { ...User[this.type] },
+      product: { ...Product },
       errorMessage: '',
-      validations: Validations(['req', 'ruleAlpha', 'ruleTelephone', 'ruleEmail', 'passwordRules'])
+      categories: [
+        {
+          text: 'Dama',
+          value: 'dama'
+        },
+        {
+          text: 'Caballero',
+          value: 'caballero'
+        },
+        {
+          text: 'Niño',
+          value: 'niño'
+        },
+        {
+          text: 'Niña',
+          value: 'niña'
+        },
+        {
+          text: 'Joven',
+          value: 'joven'
+        }
+      ],
+      validations: Validations(['req'])
     }
   },
   methods: {
     edit (item) {
       this.openModal(true)
-      this.user = {
-        ...item,
-        role_id: parseInt(item.role_id),
-        status: parseInt(item.status)
-      }
-      // console.log(this.user)
+      this.product = { ...item }
+      console.log(this.product)
     },
     add () {
       this.loading = false
       this.disableButton = false
-      this.user = { ...User[this.type] }
+      this.product = { ...Product }
       this.openModal()
-      // setTimeout(() => {
-      //   this.$refs.form.resetValidation()
-      // }, 100)
       // this.$refs.form.resetValidation()
     },
     openModal (edit = false) {
@@ -196,15 +212,10 @@ export default {
       this.phoneError = false
     },
     closeModal () {
-      this.user = { ...User[this.type] }
+      this.product = { ...Product }
       this.editMode = false
       this.disableButton = false
       this.loading = false
-      this.emailError = false
-      this.phoneError = false
-      // setTimeout(() => {
-      //   this.$refs.form.resetValidation()
-      // }, 100)
       this.dialog = false
     },
     async save () {
@@ -212,8 +223,8 @@ export default {
         this.loadingButton = true
         try {
           const res = this.editMode
-            ? await this.$axios.put(`/users/${this.user.id}`, this.user)
-            : await this.$axios.post('/users', this.user)
+            ? await this.$axios.put(`/products/${this.product.id}`, this.product)
+            : await this.$axios.post('/products', this.product)
           this.$store.dispatch('notify', { success: true, message: res.data })
           this.loadingButton = false
           this.$emit('reloadTable')

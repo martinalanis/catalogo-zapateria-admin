@@ -81,7 +81,7 @@
       color="#212121"
       elevation="1"
     >
-      <nuxt-link to="/home" class="app-bar-logo">
+      <nuxt-link to="/" class="app-bar-logo">
         <img src="~/assets/logo.webp" alt="Zapaterias de León" class="img-block">
       </nuxt-link>
       <v-spacer></v-spacer>

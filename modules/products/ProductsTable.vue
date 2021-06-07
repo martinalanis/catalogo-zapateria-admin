@@ -8,7 +8,7 @@
           outlined
           color="blue darken-4"
           class="d-none d-md-block caption"
-          @click="$refs.vendedorForm.add()"
+          @click="$refs.productFormModal.add()"
         >
           <v-icon left small>mdi-account</v-icon>
           agregar producto
@@ -19,7 +19,7 @@
           small
           color="purple"
           class="d-block d-md-none"
-          @click="$refs.vendedorForm.add()"
+          @click="$refs.productFormModal.add()"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -47,8 +47,6 @@
             </v-btn>
           </v-text-field>
         </v-form>
-        <!-- <v-form class="d-flex" lazy @submit.prevent="fetch">
-        </v-form> -->
       </v-col>
     </v-row>
     <v-data-table
@@ -67,7 +65,7 @@
     >
       <template #[`item.imagen`]="{ item }">
         <v-avatar rounded class="elevation-2 my-2">
-          <img :src="item.imagen" alt="">
+          <img :src="item.imagenUrl" alt="">
         </v-avatar>
       </template>
       <template #[`item.status`]="{ item }">
@@ -81,13 +79,13 @@
             text
             x-small
             color="primary"
-            @click="$refs.vendedorForm.edit(item)"
+            @click.stop="$refs.productFormModal.edit(item)"
           >editar</v-btn>
           <v-btn
             x-small
             color="red"
             text
-            @click.stop="remove"
+            @click.stop="$refs.confirmModal.openModal(item.id)"
           >
             eliminar
           </v-btn>
@@ -117,19 +115,23 @@
       </template>
       <template #expanded-item="{ item }">
         <td :colspan="headers.length + 1">
-          <product-details :product="item"/>
+          <product-details :product="item" />
         </td>
       </template>
     </v-data-table>
-    <!-- <user-form ref="vendedorForm" :roles="roles" @reloadTable="fetch"/>
-    <admin-confirm-modal ref="confirmModal" @confirmed="remove"/>
+    <product-form-modal ref="productFormModal" @reloadTable="fetch"/>
+    <admin-confirm-modal
+      ref="confirmModal"
+      @confirmed="remove"
+    />
+    <!-- <admin-confirm-modal ref="confirmModal" @confirmed="remove"/>
     <change-password-modal ref="changePasswordModal" @reloadTable="fetch"/> -->
   </div>
 </template>
 
 <script>
-// import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
-// import UserForm from './UserFormModal'
+import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
+import ProductFormModal from './ProductFormModal'
 import ProductDetails from './ProductDetails'
 // import ChangePasswordModal from './ChangePasswordModal'
 
@@ -137,15 +139,9 @@ export default {
   name: 'ProductosTable',
   components: {
     // ChangePasswordModal,
-    // AdminConfirmModal,
-    ProductDetails
-    // UserForm
-  },
-  props: {
-    type: {
-      type: String,
-      default: ''
-    }
+    AdminConfirmModal,
+    ProductDetails,
+    ProductFormModal
   },
   data () {
     return {
@@ -158,8 +154,8 @@ export default {
           filterable: false
         },
         {
-          text: 'Marca',
-          value: 'marca'
+          text: 'Codigo',
+          value: 'codigo'
         },
         {
           text: 'Modelo',
@@ -182,7 +178,7 @@ export default {
       options: {
         page: 1,
         itemsPerPage: 10,
-        sortBy: ['marca']
+        sortBy: ['codigo']
       },
       footerProps: {
         itemsPerPageOptions: [5, 10, 25, 50]
@@ -197,10 +193,8 @@ export default {
       return this.productsData.map(us => {
         return {
           ...us,
-          imagen: `${process.env.imgPath}/${us.imagen}`,
-          precioPublico: us.precio_publico,
-          precioProveedor: us.precio_proveedor,
-          tipoZapato: us.tipo_zapato,
+          imagenUrl: `${process.env.imgPath}/${us.imagen}`,
+          categoria: us.categoria,
           createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
           lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
         }
@@ -240,18 +234,14 @@ export default {
         this.$store.dispatch('notify', { success: false, message })
       }
     },
-    // async remove (id) {
-    //   try {
-    //     const message = await this.$axios.delete(`/users/${id}`).then(r => r.data)
-    //     this.$store.dispatch('notify', { success: true, message })
-    //     this.fetch()
-    //   } catch ({ response: { data: { message } } }) {
-    //     this.$store.dispatch('notify', { success: false, message })
-    //   }
-    //   console.log('remove', id)
-    // }
-    remove () {
-      console.log('remove')
+    async remove (id) {
+      try {
+        const message = await this.$axios.delete(`/products/${id}`).then(r => r.data)
+        this.$store.dispatch('notify', { success: true, message })
+        this.fetch()
+      } catch ({ response: { data: { message } } }) {
+        this.$store.dispatch('notify', { success: false, message })
+      }
     },
     async resetSearch () {
       this.search = ''
