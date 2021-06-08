@@ -30,6 +30,22 @@ body, html {
   border-radius: 5px;
 }
 
+.img-container {
+  width: 100%;
+  height: 250px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 5px;
+  .placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+}
+
 .img-block {
   width: 100%;
   height: 100%;

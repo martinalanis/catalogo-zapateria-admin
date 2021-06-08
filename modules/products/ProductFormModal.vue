@@ -3,7 +3,7 @@
     v-model="dialog"
     persistent
     scrollable
-    max-width="500px"
+    max-width="800px"
     content-class="d_content_overflow_visible"
   >
     <v-form v-if="dialog" ref="form" lazy-validation @submit.prevent="save">
@@ -19,105 +19,146 @@
           </p>
         </v-card-title>
         <v-card-text class="relative">
-          <v-row>
-            <v-col cols="6">
-              <v-text-field
-                v-model.trim="product.codigo"
-                label="Codigo*"
-                hide-details="auto"
-                :rules="validations.req"
-                :loading="loading"
-              />
+          <v-row align="center">
+            <v-col cols="12" md="4">
+              <v-row>
+                <v-col cols="12">
+                  <div class="img-container">
+                    <template v-if="!editMode">
+                      <div
+                        v-if="!image.url"
+                        class="placeholder"
+                        @click="$refs.imageFile.$refs.input.click()"
+                      >
+                        <v-icon class="mb-3" large color="#ababab">mdi-image-outline</v-icon>
+                        <p>Agregar imagen</p>
+                      </div>
+                      <img v-else :src="image.url" alt="" class="img-block">
+                    </template>
+                    <template v-else>
+                      <img v-if="!image.url" :src="product.imagenUrl" alt="" class="img-block">
+                      <img v-else :src="image.url" alt="" class="img-block">
+                    </template>
+                  </div>
+                </v-col>
+                <v-col cols="12">
+                  <v-file-input
+                    ref="imageFile"
+                    v-model="image.file"
+                    label="Imagen"
+                    show-size
+                    counter
+                    dense
+                    clearable
+                    accept="image/png, image/jpeg"
+                    prepend-icon="mdi-image-outline"
+                    @change="imageChange"
+                  />
+                </v-col>
+              </v-row>
             </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model.trim="product.modelo"
-                label="Modelo*"
-                hide-details="auto"
-                :rules="validations.req"
-                :loading="loading"
-              />
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model.trim="product.color"
-                label="Color*"
-                hide-details="auto"
-                :rules="validations.req"
-                :loading="loading"
-              />
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model.trim="product.material"
-                label="Material"
-                hide-details="auto"
-                :loading="loading"
-              />
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model.trim="product.tipo"
-                label="Tipo*"
-                hide-details="auto"
-                :rules="validations.req"
-                :loading="loading"
-              />
-            </v-col>
-            <v-col cols="6">
-              <v-select
-                v-model.trim="product.categoria"
-                label="Categoria*"
-                hide-details="auto"
-                :items="categories"
-                :rules="validations.req"
-                :loading="loading"
-              />
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model.trim="product.numeracion"
-                label="Numeración*"
-                hide-details="auto"
-                :rules="validations.req"
-                :loading="loading"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="4">
-              <v-text-field
-                v-model.trim="product.precio_publico"
-                label="Precio público*"
-                hide-details="auto"
-                :loading="loading"
-                type="number"
-              />
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model.trim="product.precio_proveedor"
-                label="Precio proveedor*"
-                hide-details="auto"
-                :loading="loading"
-                type="number"
-              />
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model.trim="product.precio_descuento"
-                label="Precio descuento*"
-                hide-details="auto"
-                :loading="loading"
-                type="number"
-              />
-            </v-col>
-          </v-row>
-          <v-row v-if="!editMode">
-            <v-col>
-              <p class="mb-0 subtitle-2">
-                <small><i>*Campos requeridos</i></small>
-              </p>
+            <v-col cols="12" md="8">
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model.trim="product.codigo"
+                    label="Codigo*"
+                    hide-details="auto"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model.trim="product.modelo"
+                    label="Modelo*"
+                    hide-details="auto"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model.trim="product.color"
+                    label="Color*"
+                    hide-details="auto"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model.trim="product.material"
+                    label="Material"
+                    hide-details="auto"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model.trim="product.tipo"
+                    label="Tipo*"
+                    hide-details="auto"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-select
+                    v-model.trim="product.categoria"
+                    label="Categoria*"
+                    hide-details="auto"
+                    :items="categories"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model.trim="product.numeracion"
+                    label="Numeración*"
+                    hide-details="auto"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-text-field
+                    v-model.trim="product.precio_publico"
+                    label="Precio público*"
+                    hide-details="auto"
+                    :loading="loading"
+                    type="number"
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    v-model.trim="product.precio_proveedor"
+                    label="Precio proveedor*"
+                    hide-details="auto"
+                    :loading="loading"
+                    type="number"
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                    v-model.trim="product.precio_descuento"
+                    label="Precio descuento*"
+                    hide-details="auto"
+                    :loading="loading"
+                    type="number"
+                  />
+                </v-col>
+              </v-row>
+              <v-row v-if="!editMode">
+                <v-col>
+                  <p class="mb-0 subtitle-2">
+                    <small><i>*Campos requeridos</i></small>
+                  </p>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
           <v-row v-if="errorMessage">
@@ -176,6 +217,10 @@ export default {
       disableButton: false,
       loadingButton: false,
       product: { ...Product },
+      image: {
+        file: null,
+        url: null
+      },
       errorMessage: '',
       categories: [
         {
@@ -223,6 +268,10 @@ export default {
     },
     closeModal () {
       this.product = { ...Product }
+      this.image = {
+        file: null,
+        url: null
+      }
       this.editMode = false
       this.disableButton = false
       this.loading = false
@@ -251,6 +300,18 @@ export default {
       } else {
         // this.$store.dispatch('notify', { success: false, message: { message: 'Completa los campos requeridos' } })
       }
+    },
+    imageChange () {
+      const file = this.image.file
+      if (file) {
+        const fr = new FileReader()
+        fr.readAsDataURL(file)
+        fr.addEventListener('load', () => {
+          this.image.url = fr.result
+        })
+        return
+      }
+      this.image.url = null
     },
     errorHandler ({ email, phone }) {
       const msg = []
