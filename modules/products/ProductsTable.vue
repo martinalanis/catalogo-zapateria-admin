@@ -216,6 +216,7 @@ export default {
     async fetch () {
       this.loading = true
       try {
+        this.search && (this.options.page = 1)
         const query = [
           `page=${this.options.page}`,
           `limit=${this.options.itemsPerPage}`

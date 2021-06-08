@@ -251,7 +251,7 @@ export default {
     edit (item) {
       this.openModal(true)
       this.product = { ...item }
-      console.log(this.product)
+      // console.log(this.product)
     },
     add () {
       this.loading = false
@@ -281,9 +281,14 @@ export default {
       if (this.$refs.form.validate()) {
         this.loadingButton = true
         try {
+          const headers = {
+            'Content-Type': 'multipart/form-data'
+          }
+          const formData = this.createFormData(this.product, this.image.file, this.editMode)
+          console.log('formData', formData)
           const res = this.editMode
-            ? await this.$axios.put(`/products/${this.product.id}`, this.product)
-            : await this.$axios.post('/products', this.product)
+            ? await this.$axios.post(`/products/${this.product.id}`, formData, headers)
+            : await this.$axios.post('/products', formData, headers)
           this.$store.dispatch('notify', { success: true, message: res.data })
           this.loadingButton = false
           this.$emit('reloadTable')
@@ -312,6 +317,23 @@ export default {
         return
       }
       this.image.url = null
+    },
+    createFormData (form, file = null, edit = false) {
+      const formData = new FormData()
+      Object.keys(form).forEach(key => {
+        // Si es null el valor lo mandamos como string vacio
+        form[key] ? formData.append(key, form[key]) : formData.append(key, '')
+      })
+      if (file) {
+        formData.append('imageFile', file, Date.now() + file.name)
+      }
+      // Agregar method put como parametro ya que laravel no detecta formData en method PUT
+      // https://stackoverflow.com/questions/54686218/laravel-vuejs-axios-put-request-formdata-is-empty
+      if (edit) {
+        formData.append('_method', 'PUT')
+      }
+      // return file ? formData.append('imageFile', file, Date.now() + file.name) : formData
+      return formData
     },
     errorHandler ({ email, phone }) {
       const msg = []
