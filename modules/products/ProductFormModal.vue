@@ -36,8 +36,20 @@
                       <img v-else :src="image.url" alt="" class="img-block">
                     </template>
                     <template v-else>
-                      <img v-if="!image.url" :src="product.imagenUrl" alt="" class="img-block">
-                      <img v-else :src="image.url" alt="" class="img-block">
+                      <img
+                        v-if="!image.url"
+                        :src="product.imagenUrl"
+                        alt=""
+                        class="img-block cursor-pointer"
+                        @click="$refs.imageFile.$refs.input.click()"
+                      >
+                      <img
+                        v-else
+                        :src="image.url"
+                        alt=""
+                        class="img-block cursor-pointer"
+                        @click="$refs.imageFile.$refs.input.click()"
+                      >
                     </template>
                   </div>
                 </v-col>
@@ -59,7 +71,7 @@
             </v-col>
             <v-col cols="12" md="8">
               <v-row>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.codigo"
                     label="Codigo*"
@@ -68,7 +80,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.modelo"
                     label="Modelo*"
@@ -77,7 +89,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.color"
                     label="Color*"
@@ -86,7 +98,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.material"
                     label="Material"
@@ -94,7 +106,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.tipo"
                     label="Tipo*"
@@ -103,7 +115,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                   <v-select
                     v-model.trim="product.categoria"
                     label="Categoria*"
@@ -113,7 +125,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.numeracion"
                     label="Numeración*"
@@ -124,7 +136,7 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col cols="4">
+                <v-col cols="6" sm="4">
                   <v-text-field
                     v-model.trim="product.precio_publico"
                     label="Precio público*"
@@ -133,7 +145,7 @@
                     type="number"
                   />
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="6" sm="4">
                   <v-text-field
                     v-model.trim="product.precio_proveedor"
                     label="Precio proveedor*"
@@ -142,7 +154,7 @@
                     type="number"
                   />
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="6" sm="4">
                   <v-text-field
                     v-model.trim="product.precio_descuento"
                     label="Precio descuento*"
@@ -177,7 +189,7 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-card-actions class="px-3 pb-3">
+        <v-card-actions class="px-3 pb-3 border-top hidden-border-tablet">
           <v-spacer></v-spacer>
           <v-btn
             color="#656565"
