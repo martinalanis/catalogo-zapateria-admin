@@ -24,11 +24,10 @@
               </h3>
               <!-- <h4 class="text--secondary caption text-center mb-6">CATÁLOGO DIGITAL</h4> -->
               <v-text-field
-                v-model.trim="form.phone"
-                label="Número de teléfono"
-                :rules="validations.rulePhone"
+                v-model.trim="form.user"
+                label="Teléfono o email"
+                :rules="validations.req"
                 :error="error"
-                type="tel"
                 color="amber"
                 prepend-inner-icon="mdi-phone"
                 filled
@@ -84,6 +83,7 @@
 </template>
 
 <script>
+import Validations from '@/helpers/validations'
 export default {
   name: 'IndexPage',
   components: {
@@ -94,31 +94,10 @@ export default {
       showPassword: false,
       loading: false,
       form: {
-        phone: '',
+        user: '',
         password: ''
       },
-      validations: {
-        rulePhone: [
-          value => !!value || 'Campo requerido.',
-          value => {
-            if (value?.length) {
-              return (value || '').length <= 10 || 'Max 10 caracteres'
-            }
-            return true
-          },
-          value => {
-            if (value?.length) {
-              const pattern = /^[0-9]+$/
-              return pattern.test(value) || 'Ingresa solo números.'
-            }
-            return true
-          }
-        ],
-        passwordRules: [
-          value => !!value || 'Campo requerido.',
-          value => value.length >= 6 || 'Minimo 6 caracteres'
-        ]
-      },
+      validations: Validations(['req', 'passwordRules']),
       error: false
     }
   },
