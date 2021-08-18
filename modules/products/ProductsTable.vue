@@ -83,7 +83,7 @@
     >
       <template #[`item.imagen`]="{ item }">
         <v-avatar rounded class="elevation-2 my-2">
-          <img :src="item.imagen" alt="" class="img-block">
+          <img :src="item.imagen_url" alt="" class="img-block">
         </v-avatar>
       </template>
       <template #[`item.status`]="{ item }">

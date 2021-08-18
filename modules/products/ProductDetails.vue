@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6">
         <h3 class="px-3 mb-2 grey--text text--darken-3 text-uppercase">{{ product.codigo }}</h3>
         <div class="rounded-lg overflow-hidden">
-          <img :src="product.imagen" alt="" class="img-block">
+          <img :src="product.imagen_url" alt="" class="img-block">
         </div>
         <v-simple-table>
           <template #default>

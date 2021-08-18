@@ -38,7 +38,7 @@
                     <template v-else>
                       <img
                         v-if="!image.url"
-                        :src="product.imagen"
+                        :src="product.imagen_url"
                         alt=""
                         class="img-block cursor-pointer"
                         @click="$refs.imageFile.$refs.input.click()"
