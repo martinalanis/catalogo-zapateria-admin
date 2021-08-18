@@ -35,12 +35,7 @@ export default {
   components: true,
 
   env: {
-    urlApi: process.env.NODE_ENV !== 'production'
-      ? process.env.URL_API
-      : 'https://api.zapateriasdleon.com/api',
-    imgPath: process.env.NODE_ENV !== 'production'
-      ? process.env.IMG_PATH
-      : 'https://api.zapateriasdleon.com/img'
+    urlApi: `${process.env.URL_API}/api`
   },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
@@ -66,18 +61,17 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     credentials: true,
-    baseUrl: process.env.NODE_ENV !== 'production'
-      ? process.env.URL_API
-      : 'https://api.zapateriasdleon.com/api'
+    baseUrl: `${process.env.URL_API}/api`
   },
 
   auth: {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: process.env.NODE_ENV !== 'production'
-          ? 'http://localhost/zapateria/api/public'
-          : 'https://api.zapateriasdleon.com',
+        // url: process.env.NODE_ENV !== 'production'
+        //   ? 'http://localhost/zapateria/api/public'
+        //   : 'https://api.zapateriasdleon.com',
+        url: process.env.URL_API,
         // user endpoint uses packages defaults https://github.com/nuxt-community/auth-module/blob/dev/src/providers/laravel-sanctum.ts
         endpoints: {
           login: {

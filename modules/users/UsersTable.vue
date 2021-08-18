@@ -143,12 +143,12 @@ export default {
           value: 'name'
         },
         {
-          text: 'Email',
-          value: 'email'
-        },
-        {
           text: 'Telefono',
           value: 'phone'
+        },
+        {
+          text: 'Email',
+          value: 'email'
         },
         // {
         //   text: 'Rol',
@@ -173,6 +173,7 @@ export default {
       return this.usuariosData.map(us => {
         return {
           ...us,
+          email: us.email ? us.email : 'N/A',
           statusText: us.status ? 'activo' : 'inactivo',
           statusColor: us.status ? 'success' : 'disabled',
           // rol: us.role.name || '',

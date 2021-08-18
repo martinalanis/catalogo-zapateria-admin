@@ -25,6 +25,12 @@ const validations = {
       return pattern.test(value) || 'Email no válido.'
     }
   ],
+  ruleEmailOptional: [
+    value => {
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return value ? (pattern.test(value) || 'Email no válido.') : true
+    }
+  ],
   passwordRules: [
     value => !!value || 'Campo requerido.',
     value => value.length >= 6 || 'Minimo 6 caracteres'

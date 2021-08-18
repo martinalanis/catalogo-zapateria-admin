@@ -2,7 +2,8 @@
   <v-container>
     <v-row>
       <v-col cols="6">
-        <h4 class="mb-4 text--secondary border-bottom pb-1">GENERALES</h4>
+        <h4 class="text--secondary border-bottom pb-1">GENERALES</h4>
+        <v-divider class="mb-2"></v-divider>
         <p>
           <small class="text--secondary">NOMBRE</small><br>
           {{ user.name }}
@@ -33,7 +34,8 @@
         </div>
       </v-col>
       <v-col cols="6">
-        <h4 class="mb-6 text--secondary border-bottom pb-1">CONTACTO</h4>
+        <h4 class="text--secondary border-bottom pb-1">CONTACTO</h4>
+        <v-divider class="mb-2"></v-divider>
         <p>
           <small class="text--secondary">EMAIL</small><br>
           {{ user.email }}

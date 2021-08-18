@@ -5,23 +5,41 @@
       <v-col cols="auto">
         <v-btn
           dark
-          outlined
-          color="blue darken-4"
+          color="green darken-1"
           class="d-none d-md-block caption"
           @click="$refs.productFormModal.add()"
         >
-          <v-icon left small>mdi-account</v-icon>
-          agregar producto
+          <v-icon left size="1.7rem">mdi-shoe-formal</v-icon>
+          agregar
         </v-btn>
         <v-btn
           dark
           fab
           small
-          color="purple"
+          color="green darken-1"
           class="d-block d-md-none"
           @click="$refs.productFormModal.add()"
         >
           <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn
+          dark
+          color="blue darken-1"
+          class="d-none d-md-block caption"
+        >
+          <v-icon left>mdi-file-plus-outline</v-icon>
+          EXCEL
+        </v-btn>
+        <v-btn
+          dark
+          fab
+          small
+          color="blue darken-1"
+          class="d-block d-md-none"
+        >
+          <v-icon>mdi-shoe-formal</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -65,7 +83,7 @@
     >
       <template #[`item.imagen`]="{ item }">
         <v-avatar rounded class="elevation-2 my-2">
-          <img :src="item.imagenUrl" alt="" class="img-block">
+          <img :src="item.imagen" alt="" class="img-block">
         </v-avatar>
       </template>
       <template #[`item.status`]="{ item }">
@@ -89,28 +107,6 @@
           >
             eliminar
           </v-btn>
-          <!-- <v-menu left offset-y offset-x :nudge-right="10">
-            <template #activator="{ on }">
-              <v-icon v-on="on">mdi-dots-vertical</v-icon>
-            </template>
-            <v-list dense class="py-0 text-right">
-              <v-list-item
-                link
-                class="px-2 py-0 v_list_dense-h"
-                @click="$refs.changePasswordModal.openModal(item.id)"
-              >
-                <v-list-item-title class="caption">Cambiar contraseña</v-list-item-title>
-              </v-list-item>
-              <v-divider></v-divider>
-              <v-list-item
-                link
-                class="px-2 py-0 v_list_dense-h"
-                @click="$refs.confirmModal.openModal(item.id)"
-              >
-                <v-list-item-title class="caption red--text">Eliminar</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu> -->
         </div>
       </template>
       <template #expanded-item="{ item }">
@@ -124,8 +120,6 @@
       ref="confirmModal"
       @confirmed="remove"
     />
-    <!-- <admin-confirm-modal ref="confirmModal" @confirmed="remove"/>
-    <change-password-modal ref="changePasswordModal" @reloadTable="fetch"/> -->
   </div>
 </template>
 
@@ -133,12 +127,10 @@
 import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
 import ProductFormModal from './ProductFormModal'
 import ProductDetails from './ProductDetails'
-// import ChangePasswordModal from './ChangePasswordModal'
 
 export default {
   name: 'ProductosTable',
   components: {
-    // ChangePasswordModal,
     AdminConfirmModal,
     ProductDetails,
     ProductFormModal
@@ -162,12 +154,12 @@ export default {
           value: 'modelo'
         },
         {
-          text: 'Color',
-          value: 'color'
+          text: 'Tipo',
+          value: 'tipo'
         },
         {
-          text: 'Numeración',
-          value: 'numeracion'
+          text: 'Categoría',
+          value: 'categoria'
         },
         {
           text: '',
@@ -193,8 +185,6 @@ export default {
       return this.productsData.map(us => {
         return {
           ...us,
-          imagenUrl: `${process.env.imgPath}/${us.imagen}`,
-          categoria: us.categoria,
           createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
           lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
         }
@@ -248,12 +238,6 @@ export default {
       this.search = ''
       await this.fetch()
     }
-    // getRolColor (id) {
-    //   switch (id) {
-    //     case 1: return 'light-blue lighten-3'
-    //     default: return 'grey lighten-2'
-    //   }
-    // }
   }
 }
 </script>

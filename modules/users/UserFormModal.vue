@@ -47,7 +47,7 @@
                 label="Email"
                 hide-details="auto"
                 :error="emailError"
-                :rules="validations.ruleEmail"
+                :rules="validations.ruleEmailOptional"
                 :loading="loading"
                 type="email"
               />
@@ -173,7 +173,7 @@ export default {
       phoneError: false,
       user: { ...User[this.type] },
       errorMessage: '',
-      validations: Validations(['req', 'ruleAlpha', 'ruleTelephone', 'ruleEmail', 'passwordRules'])
+      validations: Validations(['req', 'ruleAlpha', 'ruleTelephone', 'ruleEmail', 'ruleEmailOptional', 'passwordRules'])
     }
   },
   methods: {
@@ -209,6 +209,7 @@ export default {
       this.loading = false
       this.emailError = false
       this.phoneError = false
+      this.errorMessage = ''
       // setTimeout(() => {
       //   this.$refs.form.resetValidation()
       // }, 100)
@@ -232,7 +233,7 @@ export default {
             console.log(data)
           }
           this.loadingButton = false
-          this.$store.dispatch('notify', { success: false, message: data })
+          this.$store.dispatch('notify', { success: false, message: data.errors })
         }
       } else {
         // this.$store.dispatch('notify', { success: false, message: { message: 'Completa los campos requeridos' } })
