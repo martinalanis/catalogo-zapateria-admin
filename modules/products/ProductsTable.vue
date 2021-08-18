@@ -115,7 +115,7 @@
         </td>
       </template>
     </v-data-table>
-    <product-form-modal ref="productFormModal" @reloadTable="fetch"/>
+    <product-form-modal ref="productFormModal" :colores="colores" @reloadTable="fetch"/>
     <admin-confirm-modal
       ref="confirmModal"
       @confirmed="remove"
@@ -138,6 +138,7 @@ export default {
   data () {
     return {
       productsData: [],
+      colores: [],
       headers: [
         {
           text: 'Imagen',
@@ -182,11 +183,11 @@ export default {
   },
   computed: {
     products () {
-      return this.productsData.map(us => {
+      return this.productsData.map(p => {
         return {
-          ...us,
-          createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
-          lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
+          ...p,
+          createdAt: this.$dayjs(p.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
+          lastModified: this.$dayjs(p.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
         }
       })
     }
@@ -199,8 +200,9 @@ export default {
       deep: true
     }
   },
-  mounted () {
+  async mounted () {
     this.fetch()
+    this.colores = await this.$axios.get('/products/colores').then(res => res.data)
   },
   methods: {
     async fetch () {

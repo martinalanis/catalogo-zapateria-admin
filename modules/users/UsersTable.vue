@@ -29,7 +29,7 @@
       <v-col cols="auto" md="7">
         <v-text-field
           v-model="search"
-          label="Buscar en vendedores"
+          :label="`Buscar en ${type}es`"
           prepend-inner-icon="mdi-magnify"
           hide-details
           clearable

@@ -6,7 +6,7 @@
     max-width="800px"
     content-class="d_content_overflow_visible"
   >
-    <v-form v-if="dialog" ref="form" lazy-validation @submit.prevent="save">
+    <v-form v-if="dialog" ref="form" lazy-validation>
       <v-card>
         <div class="modal_header_icon blue elevation-6">
           <v-icon x-large color="#FFF">mdi-shoe-formal</v-icon>
@@ -19,7 +19,7 @@
           </p>
         </v-card-title>
         <v-card-text class="relative">
-          <v-row align="center">
+          <v-row align="start">
             <v-col cols="12" md="4">
               <v-row>
                 <v-col cols="12">
@@ -38,7 +38,7 @@
                     <template v-else>
                       <img
                         v-if="!image.url"
-                        :src="product.imagenUrl"
+                        :src="product.imagen"
                         alt=""
                         class="img-block cursor-pointer"
                         @click="$refs.imageFile.$refs.input.click()"
@@ -89,7 +89,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="12" sm="6">
+                <!-- <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.color"
                     label="Color*"
@@ -97,7 +97,7 @@
                     :rules="validations.req"
                     :loading="loading"
                   />
-                </v-col>
+                </v-col> -->
                 <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.material"
@@ -125,7 +125,35 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="12" sm="6">
+              </v-row>
+              <v-row align="end">
+                <v-col>
+                  <v-combobox
+                    v-model="product.colores"
+                    :items="colores"
+                    label="Colores"
+                    clearable
+                    multiple
+                    chips
+                    deletable-chips
+                    small-chips
+                    hide-details
+                  />
+                </v-col>
+                <!-- <v-col cols="3">
+                  <v-btn
+                    type="button"
+                    depressed
+                    outlined
+                    small
+                    color="primary"
+                    block
+                    @click="addColor"
+                  >Agregar</v-btn>
+                </v-col> -->
+              </v-row>
+              <!-- <v-row>
+                <v-col cols="12">
                   <v-text-field
                     v-model.trim="product.numeracion"
                     label="Numeración*"
@@ -134,8 +162,6 @@
                     :loading="loading"
                   />
                 </v-col>
-              </v-row>
-              <v-row>
                 <v-col cols="6" sm="4">
                   <v-text-field
                     v-model.trim="product.precio_publico"
@@ -163,8 +189,8 @@
                     type="number"
                   />
                 </v-col>
-              </v-row>
-              <v-row v-if="!editMode">
+              </v-row> -->
+              <v-row>
                 <v-col>
                   <p class="mb-0 subtitle-2">
                     <small><i>*Campos requeridos</i></small>
@@ -203,9 +229,10 @@
           <v-btn
             color="primary"
             :dark="disableButton ? false : true"
-            type="submit"
+            type="button"
             :loading="loadingButton"
             :disabled="disableButton"
+            @click.prevent="save"
           >
             Guardar
           </v-btn>
@@ -221,6 +248,12 @@ import Validations from '@/helpers/validations'
 
 export default {
   name: 'ProductFormModal',
+  props: {
+    colores: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
       dialog: false,
@@ -291,6 +324,7 @@ export default {
     },
     async save () {
       if (this.$refs.form.validate()) {
+        // console.log('submit')
         this.loadingButton = true
         try {
           const headers = {
@@ -334,7 +368,13 @@ export default {
       const formData = new FormData()
       Object.keys(form).forEach(key => {
         // Si es null el valor lo mandamos como string vacio
-        form[key] ? formData.append(key, form[key]) : formData.append(key, '')
+        if (!Array.isArray(form[key])) {
+          form[key] ? formData.append(key, form[key]) : formData.append(key, '')
+        } else {
+          form[key].forEach(el => {
+            el ? formData.append(`${key}[]`, el) : formData.append(`${key}[]`, '')
+          })
+        }
       })
       if (file) {
         formData.append('imageFile', file, Date.now() + file.name)
@@ -346,6 +386,9 @@ export default {
       }
       // return file ? formData.append('imageFile', file, Date.now() + file.name) : formData
       return formData
+    },
+    addColor () {
+      console.log('add color')
     },
     errorHandler ({ email, phone }) {
       const msg = []
