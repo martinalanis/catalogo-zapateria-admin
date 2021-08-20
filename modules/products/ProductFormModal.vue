@@ -89,15 +89,6 @@
                     :loading="loading"
                   />
                 </v-col>
-                <!-- <v-col cols="12" sm="6">
-                  <v-text-field
-                    v-model.trim="product.color"
-                    label="Color*"
-                    hide-details="auto"
-                    :rules="validations.req"
-                    :loading="loading"
-                  />
-                </v-col> -->
                 <v-col cols="12" sm="6">
                   <v-text-field
                     v-model.trim="product.material"
@@ -140,17 +131,6 @@
                     hide-details
                   />
                 </v-col>
-                <!-- <v-col cols="3">
-                  <v-btn
-                    type="button"
-                    depressed
-                    outlined
-                    small
-                    color="primary"
-                    block
-                    @click="addColor"
-                  >Agregar</v-btn>
-                </v-col> -->
               </v-row>
               <!-- <v-row>
                 <v-col cols="12">
@@ -199,6 +179,81 @@
               </v-row>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col class="d-flex justify-space-between align-center">
+              <h3>Numeraciónes</h3>
+              <v-btn
+                color="primary"
+                small
+                outlined
+                class="ml-3 text-lowercase"
+                @click.prevent="addNumeracion"
+              >
+                <v-icon left>mdi-plus</v-icon>
+                Agregar numeración
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-divider class="mt-3 mb-5"></v-divider>
+          <v-card
+            v-for="({}, i) in product.numeraciones"
+            :key="i"
+            class="mb-4"
+            elevation="1"
+          >
+            <v-card-text class="pb-1">
+              <v-row
+                align="center"
+                class="mb-0"
+              >
+                <v-col cols="12" sm="6" md="3">
+                  <v-text-field
+                    v-model.trim="product.numeraciones[i].name"
+                    label="Nombre*"
+                    hide-details="auto"
+                    outlined
+                    dense
+                    prepend-icon="mdi-close-circle-outline"
+                    :rules="validations.req"
+                    :loading="loading"
+                    @click:prepend="removeNumeracion(i)"
+                  />
+                </v-col>
+                <v-col cols="12" sm="6" md="3">
+                  <v-text-field
+                    v-model.trim="product.numeraciones[i].precio_publico"
+                    label="Regular*"
+                    hide-details="auto"
+                    dense
+                    type="number"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="12" sm="6" md="3">
+                  <v-text-field
+                    v-model.trim="product.numeraciones[i].precio_proveedor"
+                    label="Proveedor*"
+                    hide-details="auto"
+                    dense
+                    type="number"
+                    :rules="validations.req"
+                    :loading="loading"
+                  />
+                </v-col>
+                <v-col cols="12" sm="6" md="3">
+                  <v-text-field
+                    v-model.trim="product.numeraciones[i].precio_descuento"
+                    label="Descuento*"
+                    hide-details="auto"
+                    dense
+                    type="number"
+                    :loading="loading"
+                  />
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
           <v-row v-if="errorMessage">
             <v-col>
               <v-alert
@@ -296,6 +351,8 @@ export default {
     edit (item) {
       this.openModal(true)
       this.product = { ...item }
+      // Remplazar por request a bd para prevenir 2wdata binding
+      this.product.numeraciones = [...item.numeraciones]
       // console.log(this.product)
     },
     add () {
@@ -372,7 +429,9 @@ export default {
           form[key] ? formData.append(key, form[key]) : formData.append(key, '')
         } else {
           form[key].forEach(el => {
-            el ? formData.append(`${key}[]`, el) : formData.append(`${key}[]`, '')
+            typeof el === 'object'
+              ? formData.append(`${key}[]`, JSON.stringify(el))
+              : formData.append(`${key}[]`, el)
           })
         }
       })
@@ -387,8 +446,21 @@ export default {
       // return file ? formData.append('imageFile', file, Date.now() + file.name) : formData
       return formData
     },
-    addColor () {
-      console.log('add color')
+    addNumeracion () {
+      const arr = [...this.product.numeraciones]
+      arr.push({
+        name: '',
+        precio_descuento: null,
+        precio_publico: null,
+        precio_proveedor: null
+      })
+      this.product.numeraciones = arr
+      console.log('add numeracion')
+    },
+    removeNumeracion (i) {
+      const arr = [...this.product.numeraciones]
+      arr.splice(i, 1)
+      this.product.numeraciones = arr
     },
     errorHandler ({ email, phone }) {
       const msg = []

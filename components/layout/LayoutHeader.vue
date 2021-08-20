@@ -13,7 +13,7 @@
         <v-row justify="center">
           <v-col>
             <header class="header-logo elevation-2 mt-6">
-              <img src="~/assets/logo.webp" alt="Zapaterias de León">
+              <img src="~/assets/logo.png" alt="Zapaterias de León">
             </header>
           </v-col>
           <v-col cols="12" class="py-0">

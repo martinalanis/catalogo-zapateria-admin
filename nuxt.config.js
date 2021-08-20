@@ -10,8 +10,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - AdminPanel',
-    title: 'AdminPanel',
+    titleTemplate: '%s - Zapaterias de León',
+    title: 'Dashboard - Zapaterias de León',
     htmlAttrs: {
       lang: 'es',
     },

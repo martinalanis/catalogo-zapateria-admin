@@ -3,7 +3,7 @@
     <v-row justify="center" align="center">
       <v-col cols="12">
         <header class="header-logo mb-0 elevation-2">
-          <img src="~/assets/logo.webp" alt="Zapaterias de León">
+          <img src="~/assets/logo.png" alt="Zapaterias de León">
         </header>
       </v-col>
       <v-col
@@ -26,6 +26,7 @@
               <v-text-field
                 v-model.trim="form.user"
                 label="Teléfono o email"
+                autocomplete="new-email"
                 :rules="validations.req"
                 :error="error"
                 color="amber"
@@ -36,6 +37,7 @@
               <v-text-field
                 v-model.trim="form.password"
                 label="Contraseña"
+                autocomplete="new-password"
                 :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="validations.passwordRules"
                 :type="showPassword ? 'text' : 'password'"
