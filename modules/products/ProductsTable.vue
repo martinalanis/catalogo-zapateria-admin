@@ -97,7 +97,7 @@
             text
             x-small
             color="primary"
-            @click.stop="$refs.productFormModal.edit(item)"
+            @click.stop="edit(item.id)"
           >editar</v-btn>
           <v-btn
             x-small
@@ -137,7 +137,7 @@ export default {
   },
   data () {
     return {
-      productsData: [],
+      products: [],
       colores: [],
       headers: [
         {
@@ -181,17 +181,17 @@ export default {
       loading: false
     }
   },
-  computed: {
-    products () {
-      return this.productsData.map(p => {
-        return {
-          ...p,
-          createdAt: this.$dayjs(p.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
-          lastModified: this.$dayjs(p.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
-        }
-      })
-    }
-  },
+  // computed: {
+  //   products () {
+  //     return this.products.map(p => {
+  //       return {
+  //         ...p,
+  //         createdAt: this.$dayjs(p.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
+  //         lastModified: this.$dayjs(p.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
+  //       }
+  //     })
+  //   }
+  // },
   watch: {
     options: {
       async handler () {
@@ -220,7 +220,7 @@ export default {
 
         const res = await this.$axios.get(`/products?${query.join('&')}`).then(res => res.data)
         this.totalProducts = res.total
-        this.productsData = res.data
+        this.products = res.data
         this.loading = false
       } catch ({ response: { data: { message } } }) {
         this.loading = false
@@ -239,6 +239,10 @@ export default {
     async resetSearch () {
       this.search = ''
       await this.fetch()
+    },
+    edit (id) {
+      // const product = await this.$axios.get(`/products/${id}`).then(r => r.data)
+      this.$refs.productFormModal.edit(id)
     }
   }
 }

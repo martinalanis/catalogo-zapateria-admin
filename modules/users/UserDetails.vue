@@ -25,11 +25,11 @@
         <div>
           <p class="d-inline-block mr-6">
             <small class="text--secondary">FECHA CREACIÓN</small><br>
-            {{ user.createdAt }}
+            {{ user.created_at }}
           </p>
           <p class="d-inline-block">
             <small class="text--secondary">ÚLTIMA MODIFICACIÓN</small><br>
-            {{ user.lastModified }}
+            {{ user.updated_at }}
           </p>
         </div>
       </v-col>

@@ -11,11 +11,11 @@
             <tbody>
               <tr>
                 <th class="r_key">Fecha creación:</th>
-                <td>{{ product.createdAt }}</td>
+                <td>{{ product.created_at }}</td>
               </tr>
               <tr>
                 <th class="r_key">Ultima modificación:</th>
-                <td>{{ product.lastModified }}</td>
+                <td>{{ product.updated_at }}</td>
               </tr>
             </tbody>
           </template>

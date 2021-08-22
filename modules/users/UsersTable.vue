@@ -175,11 +175,11 @@ export default {
           ...us,
           email: us.email ? us.email : 'N/A',
           statusText: us.status ? 'activo' : 'inactivo',
-          statusColor: us.status ? 'success' : 'disabled',
+          statusColor: us.status ? 'success' : 'disabled'
           // rol: us.role.name || '',
           // rolColor: this.getRolColor(us.role.id),
-          createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
-          lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
+          // createdAt: this.$dayjs(us.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
+          // lastModified: this.$dayjs(us.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
         }
       })
     }

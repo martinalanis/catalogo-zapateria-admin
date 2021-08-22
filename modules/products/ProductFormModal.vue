@@ -181,12 +181,12 @@
           </v-row>
           <v-row>
             <v-col class="d-flex justify-space-between align-center">
-              <h3>Numeraciónes</h3>
+              <h3 class="d-inline-block">Numeraciónes</h3>
               <v-btn
                 color="primary"
                 small
                 outlined
-                class="ml-3 text-lowercase"
+                class="ml-3 text-lowercase d-inline-block"
                 @click.prevent="addNumeracion"
               >
                 <v-icon left>mdi-plus</v-icon>
@@ -348,19 +348,17 @@ export default {
     }
   },
   methods: {
-    edit (item) {
+    async edit (id) {
       this.openModal(true)
-      this.product = { ...item }
-      // Remplazar por request a bd para prevenir 2wdata binding
-      this.product.numeraciones = [...item.numeraciones]
-      // console.log(this.product)
+      this.loading = true
+      this.product = await this.$axios.get(`/products/${id}`).then(r => r.data)
+      this.loading = false
     },
     add () {
       this.loading = false
       this.disableButton = false
       this.product = { ...Product }
       this.openModal()
-      // this.$refs.form.resetValidation()
     },
     openModal (edit = false) {
       this.dialog = true
@@ -369,6 +367,7 @@ export default {
       this.phoneError = false
     },
     closeModal () {
+      Product.numeraciones = []
       this.product = { ...Product }
       this.image = {
         file: null,
@@ -447,20 +446,15 @@ export default {
       return formData
     },
     addNumeracion () {
-      const arr = [...this.product.numeraciones]
-      arr.push({
+      this.product.numeraciones.push({
         name: '',
         precio_descuento: null,
         precio_publico: null,
         precio_proveedor: null
       })
-      this.product.numeraciones = arr
-      console.log('add numeracion')
     },
     removeNumeracion (i) {
-      const arr = [...this.product.numeraciones]
-      arr.splice(i, 1)
-      this.product.numeraciones = arr
+      this.product.numeraciones.splice(i, 1)
     },
     errorHandler ({ email, phone }) {
       const msg = []
