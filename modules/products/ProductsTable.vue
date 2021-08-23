@@ -24,23 +24,7 @@
         </v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-btn
-          dark
-          color="blue darken-1"
-          class="d-none d-md-block caption"
-        >
-          <v-icon left>mdi-file-plus-outline</v-icon>
-          EXCEL
-        </v-btn>
-        <v-btn
-          dark
-          fab
-          small
-          color="blue darken-1"
-          class="d-block d-md-none"
-        >
-          <v-icon>mdi-shoe-formal</v-icon>
-        </v-btn>
+        <upload-file @reloadTable="fetch"/>
       </v-col>
     </v-row>
     <v-row class="align-center mb-2">
@@ -125,6 +109,7 @@
 
 <script>
 import AdminConfirmModal from '@/components/ui/AdminConfirmModal'
+import UploadFile from '@/components/UploadFile'
 import ProductFormModal from './ProductFormModal'
 import ProductDetails from './ProductDetails'
 
@@ -133,7 +118,8 @@ export default {
   components: {
     AdminConfirmModal,
     ProductDetails,
-    ProductFormModal
+    ProductFormModal,
+    UploadFile
   },
   data () {
     return {

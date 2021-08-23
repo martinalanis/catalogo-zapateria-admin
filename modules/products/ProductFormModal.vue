@@ -387,7 +387,7 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
           const formData = this.createFormData(this.product, this.image.file, this.editMode)
-          console.log('formData', formData)
+          // console.log('formData', formData)
           const res = this.editMode
             ? await this.$axios.post(`/products/${this.product.id}`, formData, headers)
             : await this.$axios.post('/products', formData, headers)
