@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^admin\.zapateriasdleon\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.admin\.zapateriasdleon\.com$
+RewriteRule ^(.*)$ "https\:\/\/admin\.zapateriasdleon\.com\/$1" [R=301,L]

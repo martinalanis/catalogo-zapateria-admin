@@ -72,7 +72,6 @@ export default {
         //   ? 'http://localhost/zapateria/api/public'
         //   : 'https://api.zapateriasdleon.com',
         url: process.env.URL_API,
-        // user endpoint uses packages defaults https://github.com/nuxt-community/auth-module/blob/dev/src/providers/laravel-sanctum.ts
         endpoints: {
           login: {
             url: '/api/admin/login'
