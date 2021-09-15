@@ -435,7 +435,7 @@ export default {
         }
       })
       if (file) {
-        formData.append('imageFile', file, Date.now() + file.name)
+        formData.append('imageFile', file, file.name)
       }
       // Agregar method put como parametro ya que laravel no detecta formData en method PUT
       // https://stackoverflow.com/questions/54686218/laravel-vuejs-axios-put-request-formdata-is-empty
