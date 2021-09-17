@@ -20,56 +20,7 @@
         </v-card-title>
         <v-card-text class="relative">
           <v-row align="start">
-            <v-col cols="12" md="4">
-              <v-row>
-                <v-col cols="12">
-                  <div class="img-container">
-                    <template v-if="!editMode">
-                      <div
-                        v-if="!image.url"
-                        class="placeholder"
-                        @click="$refs.imageFile.$refs.input.click()"
-                      >
-                        <v-icon class="mb-3" large color="#ababab">mdi-image-outline</v-icon>
-                        <p>Agregar imagen</p>
-                      </div>
-                      <img v-else :src="image.url" alt="" class="img-block">
-                    </template>
-                    <template v-else>
-                      <img
-                        v-if="!image.url"
-                        :src="product.imagen_url"
-                        alt=""
-                        class="img-block cursor-pointer"
-                        @click="$refs.imageFile.$refs.input.click()"
-                      >
-                      <img
-                        v-else
-                        :src="image.url"
-                        alt=""
-                        class="img-block cursor-pointer"
-                        @click="$refs.imageFile.$refs.input.click()"
-                      >
-                    </template>
-                  </div>
-                </v-col>
-                <v-col cols="12">
-                  <v-file-input
-                    ref="imageFile"
-                    v-model="image.file"
-                    label="Imagen"
-                    show-size
-                    counter
-                    dense
-                    clearable
-                    accept="image/png, image/jpeg"
-                    prepend-icon="mdi-image-outline"
-                    @change="imageChange"
-                  />
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="12" md="8">
+            <v-col cols="12">
               <v-row>
                 <v-col cols="12" sm="6">
                   <v-text-field
@@ -89,7 +40,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
                   <v-text-field
                     v-model.trim="product.material"
                     label="Material"
@@ -97,7 +48,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
                   <v-text-field
                     v-model.trim="product.tipo"
                     label="Tipo*"
@@ -106,7 +57,7 @@
                     :loading="loading"
                   />
                 </v-col>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
                   <v-select
                     v-model.trim="product.categoria"
                     label="Categoria*"
@@ -117,59 +68,6 @@
                   />
                 </v-col>
               </v-row>
-              <v-row align="end">
-                <v-col>
-                  <v-combobox
-                    v-model="product.colores"
-                    :items="colores"
-                    label="Colores"
-                    clearable
-                    multiple
-                    chips
-                    deletable-chips
-                    small-chips
-                    hide-details
-                  />
-                </v-col>
-              </v-row>
-              <!-- <v-row>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model.trim="product.numeracion"
-                    label="Numeración*"
-                    hide-details="auto"
-                    :rules="validations.req"
-                    :loading="loading"
-                  />
-                </v-col>
-                <v-col cols="6" sm="4">
-                  <v-text-field
-                    v-model.trim="product.precio_publico"
-                    label="Precio público*"
-                    hide-details="auto"
-                    :loading="loading"
-                    type="number"
-                  />
-                </v-col>
-                <v-col cols="6" sm="4">
-                  <v-text-field
-                    v-model.trim="product.precio_proveedor"
-                    label="Precio proveedor*"
-                    hide-details="auto"
-                    :loading="loading"
-                    type="number"
-                  />
-                </v-col>
-                <v-col cols="6" sm="4">
-                  <v-text-field
-                    v-model.trim="product.precio_descuento"
-                    label="Precio descuento*"
-                    hide-details="auto"
-                    :loading="loading"
-                    type="number"
-                  />
-                </v-col>
-              </v-row> -->
               <v-row>
                 <v-col>
                   <p class="mb-0 subtitle-2">
@@ -177,6 +75,107 @@
                   </p>
                 </v-col>
               </v-row>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="d-flex justify-space-between align-center">
+              <h3 class="d-inline-block">Colores / Imagenes</h3>
+              <v-btn
+                outlined
+                color="primary"
+                small
+                class="ml-3 text-lowercase d-inline-block"
+                @click.prevent="addColor"
+              >
+                <!-- <v-icon left>mdi-plus</v-icon> -->
+                Agregar color
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-divider class="mt-3 mb-5"></v-divider>
+          <v-row>
+            <v-col
+              v-for="({}, j) in product.colores"
+              :key="j"
+              cols="6"
+            >
+              <v-card
+                elevation="1"
+              >
+                <v-card-text class="pb-1">
+                  <v-row
+                    align="center"
+                    class="mb-0"
+                  >
+                    <v-col cols="6">
+                      <div class="img-container">
+                        <template v-if="!editMode">
+                          <div
+                            v-if="!image[j].url"
+                            class="placeholder"
+                            @click="$refs.imageFile[j].$refs.input.click()"
+                          >
+                            <v-icon class="mb-3" large color="#ababab">mdi-image-outline</v-icon>
+                            <p>Agregar imagen</p>
+                          </div>
+                          <img v-else :src="image[j].url" alt="" class="img-block">
+                        </template>
+                        <template v-else>
+                          <img
+                            v-if="!image[j].url"
+                            :src="product.colores[j].imagen_url"
+                            alt=""
+                            class="img-block cursor-pointer"
+                            @click="$refs.imageFile[j].$refs.input.click()"
+                          >
+                          <img
+                            v-else
+                            :src="image[j].url"
+                            alt=""
+                            class="img-block cursor-pointer"
+                            @click="$refs.imageFile[j].$refs.input.click()"
+                          >
+                        </template>
+                      </div>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-row>
+                        <v-col cols="12" class="pb-0">
+                          <v-file-input
+                            ref="imageFile"
+                            v-model="image[j].file"
+                            label="Imagen"
+                            show-size
+                            dense
+                            clearable
+                            accept="image/png, image/jpeg"
+                            prepend-icon="mdi-image-outline"
+                            @change="imageChange(j)"
+                          />
+                        </v-col>
+                        <v-col cols="12">
+                          <v-combobox
+                            v-model="product.colores[j].name"
+                            :items="colores"
+                            label="Color"
+                            clearable
+                            hide-details
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-btn
+                        outlined
+                        small
+                        block
+                        color="deep-orange darken-3"
+                        @click="removeColor(j)"
+                      >eliminar</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
             </v-col>
           </v-row>
           <v-row>
@@ -189,7 +188,7 @@
                 class="ml-3 text-lowercase d-inline-block"
                 @click.prevent="addNumeracion"
               >
-                <v-icon left>mdi-plus</v-icon>
+                <!-- <v-icon left>mdi-plus</v-icon> -->
                 Agregar numeración
               </v-btn>
             </v-col>
@@ -317,10 +316,7 @@ export default {
       disableButton: false,
       loadingButton: false,
       product: { ...Product },
-      image: {
-        file: null,
-        url: null
-      },
+      image: [],
       errorMessage: '',
       categories: [
         {
@@ -368,11 +364,9 @@ export default {
     },
     closeModal () {
       Product.numeraciones = []
+      Product.colores = []
       this.product = { ...Product }
-      this.image = {
-        file: null,
-        url: null
-      }
+      this.image = []
       this.editMode = false
       this.disableButton = false
       this.loading = false
@@ -408,17 +402,17 @@ export default {
         // this.$store.dispatch('notify', { success: false, message: { message: 'Completa los campos requeridos' } })
       }
     },
-    imageChange () {
-      const file = this.image.file
+    imageChange (j) {
+      const file = this.image[j].file
       if (file) {
         const fr = new FileReader()
         fr.readAsDataURL(file)
         fr.addEventListener('load', () => {
-          this.image.url = fr.result
+          this.image[j].url = fr.result
         })
         return
       }
-      this.image.url = null
+      this.image[j].url = null
     },
     createFormData (form, file = null, edit = false) {
       const formData = new FormData()
@@ -453,8 +447,22 @@ export default {
         precio_proveedor: null
       })
     },
+    addColor () {
+      this.product.colores.push({
+        name: '',
+        imagen: null
+      })
+      this.image.push({
+        file: null,
+        url: null
+      })
+    },
     removeNumeracion (i) {
       this.product.numeraciones.splice(i, 1)
+    },
+    removeColor (i) {
+      this.product.colores.splice(i, 1)
+      this.image.splice(i, 1)
     },
     errorHandler ({ email, phone }) {
       const msg = []

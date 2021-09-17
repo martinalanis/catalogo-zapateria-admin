@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6">
         <h3 class="px-3 mb-2 grey--text text--darken-3 text-uppercase">{{ product.codigo }}</h3>
         <div class="rounded-lg overflow-hidden">
-          <img :src="product.imagen_url" alt="" class="img-block">
+          <img :src="colores[activeColor].imagen_url" alt="" class="img-block">
         </div>
         <v-simple-table>
           <template #default>
@@ -34,12 +34,15 @@
                 <th class="r_key">Colores:</th>
                 <td>
                   <v-chip
-                    v-for="color in colores" :key="color"
+                    v-for="({name}, t) in colores" :key="t"
                     label
-                    outlined
                     small
                     class="mr-2 mb-1"
-                  >{{ color.toLowerCase() }}</v-chip>
+                    color="primary"
+                    :class="activeColor === t ? 'elevation-3': ''"
+                    :outlined="activeColor !== t || false"
+                    @click="activeColor = t"
+                  >{{ name.toLowerCase() }}</v-chip>
                 </td>
               </tr>
               <tr>
@@ -124,7 +127,8 @@ export default {
   },
   data () {
     return {
-      active: 0
+      active: 0,
+      activeColor: 0
     }
   },
   computed: {

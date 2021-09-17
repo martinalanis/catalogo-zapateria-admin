@@ -67,7 +67,7 @@
     >
       <template #[`item.imagen`]="{ item }">
         <v-avatar rounded class="elevation-2 my-2">
-          <img :src="item.imagen_url" alt="" class="img-block">
+          <img :src="item.thumbnail" alt="" class="img-block">
         </v-avatar>
       </template>
       <template #[`item.status`]="{ item }">
@@ -123,7 +123,7 @@ export default {
   },
   data () {
     return {
-      products: [],
+      productsData: [],
       colores: [],
       headers: [
         {
@@ -167,17 +167,16 @@ export default {
       loading: false
     }
   },
-  // computed: {
-  //   products () {
-  //     return this.products.map(p => {
-  //       return {
-  //         ...p,
-  //         createdAt: this.$dayjs(p.created_at).format('DD/MM/YYYY HH:mm:ss') || '',
-  //         lastModified: this.$dayjs(p.updated_at).format('DD/MM/YYYY HH:mm:ss') || ''
-  //       }
-  //     })
-  //   }
-  // },
+  computed: {
+    products () {
+      return this.productsData.map(p => {
+        return {
+          ...p,
+          thumbnail: p.colores.length && p.colores[0].imagen_url
+        }
+      })
+    }
+  },
   watch: {
     options: {
       async handler () {
@@ -206,7 +205,7 @@ export default {
 
         const res = await this.$axios.get(`/products?${query.join('&')}`).then(res => res.data)
         this.totalProducts = res.total
-        this.products = res.data
+        this.productsData = res.data
         this.loading = false
       } catch ({ response: { data: { message } } }) {
         this.loading = false
