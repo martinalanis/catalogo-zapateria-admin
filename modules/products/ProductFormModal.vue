@@ -150,6 +150,7 @@
                             clearable
                             accept="image/png, image/jpeg"
                             prepend-icon="mdi-image-outline"
+                            :rules="validations.req"
                             @change="imageChange(j)"
                           />
                         </v-col>
@@ -157,6 +158,7 @@
                           <v-combobox
                             v-model="product.colores[j].name"
                             :items="colores"
+                            :rules="validations.req"
                             label="Color"
                             clearable
                             hide-details
@@ -243,7 +245,7 @@
                 <v-col cols="12" sm="6" md="3">
                   <v-text-field
                     v-model.trim="product.numeraciones[i].precio_descuento"
-                    label="Descuento*"
+                    label="Descuento"
                     hide-details="auto"
                     dense
                     type="number"
@@ -373,14 +375,15 @@ export default {
       this.dialog = false
     },
     async save () {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate() && this.validateDynamicData()) {
         // console.log('submit')
+        // if (!) return
         this.loadingButton = true
         try {
           const headers = {
             'Content-Type': 'multipart/form-data'
           }
-          const formData = this.createFormData(this.product, this.image.file, this.editMode)
+          const formData = this.createFormData(this.product, this.image, this.editMode)
           // console.log('formData', formData)
           const res = this.editMode
             ? await this.$axios.post(`/products/${this.product.id}`, formData, headers)
@@ -414,8 +417,9 @@ export default {
       }
       this.image[j].url = null
     },
-    createFormData (form, file = null, edit = false) {
+    createFormData (form, files = null, edit = false) {
       const formData = new FormData()
+      console.log(files)
       Object.keys(form).forEach(key => {
         // Si es null el valor lo mandamos como string vacio
         if (!Array.isArray(form[key])) {
@@ -427,9 +431,13 @@ export default {
               : formData.append(`${key}[]`, el)
           })
         }
-      })
-      if (file) {
-        formData.append('imageFile', file, file.name)
+      }) // TODO
+      if (files && files.length) {
+        files.forEach((file, i) => {
+          formData.append(`imageFile[${i}]`, file.file, file?.file?.name)
+          console.log('index', i)
+          console.log('file', file?.file?.name)
+        })
       }
       // Agregar method put como parametro ya que laravel no detecta formData en method PUT
       // https://stackoverflow.com/questions/54686218/laravel-vuejs-axios-put-request-formdata-is-empty
@@ -463,6 +471,25 @@ export default {
     removeColor (i) {
       this.product.colores.splice(i, 1)
       this.image.splice(i, 1)
+    },
+    validateDynamicData () {
+      if (!this.product.numeraciones.length) {
+        this.addNumeracion()
+        setTimeout(() => {
+          this.$refs.form.validate()
+        }, 300)
+        this.$store.dispatch('notify', { success: false, message: 'Debes agregar al menos una numeración' })
+        return false
+      }
+      if (!this.product.colores.length) {
+        this.addColor()
+        setTimeout(() => {
+          this.$refs.form.validate()
+        }, 300)
+        this.$store.dispatch('notify', { success: false, message: 'Debes agregar al menos una imagen y color' })
+        return false
+      }
+      return true
     },
     errorHandler ({ email, phone }) {
       const msg = []
