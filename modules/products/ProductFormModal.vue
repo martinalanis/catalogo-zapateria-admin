@@ -77,6 +77,7 @@
               </v-row>
             </v-col>
           </v-row>
+          <!-- Imagenes colores -->
           <v-row>
             <v-col class="d-flex justify-space-between align-center">
               <h3 class="d-inline-block">Colores / Imagenes</h3>
@@ -111,18 +112,18 @@
                       <div class="img-container">
                         <template v-if="!editMode">
                           <div
-                            v-if="!image[j].url"
+                            v-if="!product.colores[j].url"
                             class="placeholder"
                             @click="$refs.imageFile[j].$refs.input.click()"
                           >
                             <v-icon class="mb-3" large color="#ababab">mdi-image-outline</v-icon>
                             <p>Agregar imagen</p>
                           </div>
-                          <img v-else :src="image[j].url" alt="" class="img-block">
+                          <img v-else :src="product.colores[j].url" alt="" class="img-block">
                         </template>
                         <template v-else>
                           <img
-                            v-if="!image[j].url"
+                            v-if="!product.colores[j].url"
                             :src="product.colores[j].imagen_url"
                             alt=""
                             class="img-block cursor-pointer"
@@ -130,7 +131,7 @@
                           >
                           <img
                             v-else
-                            :src="image[j].url"
+                            :src="product.colores[j].url"
                             alt=""
                             class="img-block cursor-pointer"
                             @click="$refs.imageFile[j].$refs.input.click()"
@@ -143,7 +144,7 @@
                         <v-col cols="12" class="pb-0">
                           <v-file-input
                             ref="imageFile"
-                            v-model="image[j].file"
+                            v-model="product.colores[j].file"
                             label="Imagen"
                             show-size
                             dense
@@ -180,6 +181,7 @@
               </v-card>
             </v-col>
           </v-row>
+          <!-- Numeraciones -->
           <v-row>
             <v-col class="d-flex justify-space-between align-center">
               <h3 class="d-inline-block">Numeraciónes</h3>
@@ -301,6 +303,7 @@
 <script>
 import Product from '@/interfaces/product'
 import Validations from '@/helpers/validations'
+// import ProductFormImages from '@/modules/products/ProductFormImages.vue'
 
 export default {
   name: 'ProductFormModal',
@@ -312,6 +315,7 @@ export default {
   },
   data () {
     return {
+      imgs: null,
       dialog: false,
       editMode: false,
       loading: false,
@@ -383,7 +387,7 @@ export default {
           const headers = {
             'Content-Type': 'multipart/form-data'
           }
-          const formData = this.createFormData(this.product, this.image, this.editMode)
+          const formData = this.createFormData(this.product, this.editMode)
           // console.log('formData', formData)
           const res = this.editMode
             ? await this.$axios.post(`/products/${this.product.id}`, formData, headers)
@@ -406,37 +410,42 @@ export default {
       }
     },
     imageChange (j) {
-      const file = this.image[j].file
+      const file = this.product.colores[j].file
       if (file) {
         const fr = new FileReader()
         fr.readAsDataURL(file)
         fr.addEventListener('load', () => {
-          this.image[j].url = fr.result
+          this.product.colores[j].url = fr.result
         })
         return
       }
-      this.image[j].url = null
+      this.product.colores[j].url = null
     },
-    createFormData (form, files = null, edit = false) {
+    createFormData (form, edit = false) {
       const formData = new FormData()
-      console.log(files)
+      // console.log(files)
       Object.keys(form).forEach(key => {
         // Si es null el valor lo mandamos como string vacio
         if (!Array.isArray(form[key])) {
           form[key] ? formData.append(key, form[key]) : formData.append(key, '')
         } else {
           form[key].forEach(el => {
-            typeof el === 'object'
-              ? formData.append(`${key}[]`, JSON.stringify(el))
-              : formData.append(`${key}[]`, el)
+            if (key !== 'colores') {
+              typeof el === 'object'
+                ? formData.append(`${key}[]`, JSON.stringify(el))
+                : formData.append(`${key}[]`, el)
+            }
           })
         }
       }) // TODO
-      if (files && files.length) {
-        files.forEach((file, i) => {
-          formData.append(`imageFile[${i}]`, file.file, file?.file?.name)
+      const colores = form.colores
+      if (colores && colores.length) {
+        colores.forEach((color, i) => {
+          formData.append(`colores[${i}][file]`, color.file, color?.file?.name)
+          formData.append(`colores[${i}][imagen]`, color.imagen)
+          formData.append(`colores[${i}][name]`, color.name)
           console.log('index', i)
-          console.log('file', file?.file?.name)
+          console.log('file', color?.file?.name)
         })
       }
       // Agregar method put como parametro ya que laravel no detecta formData en method PUT
@@ -457,22 +466,25 @@ export default {
     },
     addColor () {
       this.product.colores.push({
+        file: null,
+        url: null,
         name: '',
         imagen: null
       })
-      this.image.push({
-        file: null,
-        url: null
-      })
+      // this.image.push({
+      //   file: null,
+      //   url: null
+      // })
     },
     removeNumeracion (i) {
       this.product.numeraciones.splice(i, 1)
     },
     removeColor (i) {
       this.product.colores.splice(i, 1)
-      this.image.splice(i, 1)
+      // this.image.splice(i, 1)
     },
     validateDynamicData () {
+      // Asegurar que haya al menos una numeracion y precio agregados
       if (!this.product.numeraciones.length) {
         this.addNumeracion()
         setTimeout(() => {
@@ -481,6 +493,7 @@ export default {
         this.$store.dispatch('notify', { success: false, message: 'Debes agregar al menos una numeración' })
         return false
       }
+      // Asegurar que haya al menos una color e imagen agregados
       if (!this.product.colores.length) {
         this.addColor()
         setTimeout(() => {

@@ -13,14 +13,14 @@ export default {
     titleTemplate: '%s - Zapaterias de León',
     title: 'Dashboard - Zapaterias de León',
     htmlAttrs: {
-      lang: 'es',
+      lang: 'es'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: '' }
     ],
-    link: [{ rel: 'icon', type: 'image/png', href: '/logo.png' }],
+    link: [{ rel: 'icon', type: 'image/png', href: '/logo.png' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -43,7 +43,7 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
+    '@nuxtjs/vuetify'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -121,9 +121,9 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3,
-        },
-      },
+          success: colors.green.accent3
+        }
+      }
     },
     lang: {
       locales: { es },
@@ -132,5 +132,5 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {}
 }
