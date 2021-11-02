@@ -119,16 +119,6 @@
                             <v-icon class="mb-3" large color="#ababab">mdi-image-outline</v-icon>
                             <p>Agregar imagen</p>
                           </div>
-                          <img v-else :src="product.colores[j].url" alt="" class="img-block">
-                        </template>
-                        <template v-else>
-                          <img
-                            v-if="!product.colores[j].url"
-                            :src="product.colores[j].imagen_url"
-                            alt=""
-                            class="img-block cursor-pointer"
-                            @click="$refs.imageFile[j].$refs.input.click()"
-                          >
                           <img
                             v-else
                             :src="product.colores[j].url"
@@ -136,6 +126,32 @@
                             class="img-block cursor-pointer"
                             @click="$refs.imageFile[j].$refs.input.click()"
                           >
+                        </template>
+                        <template v-else>
+                          <img
+                            v-if="product.colores[j].url"
+                            :src="product.colores[j].url"
+                            alt=""
+                            class="img-block cursor-pointer"
+                            @click="$refs.imageFile[j].$refs.input.click()"
+                          >
+                          <template v-else>
+                            <div
+                              v-if="!product.colores[j].imagen_url"
+                              class="placeholder"
+                              @click="$refs.imageFile[j].$refs.input.click()"
+                            >
+                              <v-icon class="mb-3" large color="#ababab">mdi-image-outline</v-icon>
+                              <p>Agregar imagen</p>
+                            </div>
+                            <img
+                              v-else
+                              :src="product.colores[j].imagen_url"
+                              alt=""
+                              class="img-block cursor-pointer"
+                              @click="$refs.imageFile[j].$refs.input.click()"
+                            >
+                          </template>
                         </template>
                       </div>
                     </v-col>
@@ -151,7 +167,7 @@
                             clearable
                             accept="image/png, image/jpeg"
                             prepend-icon="mdi-image-outline"
-                            :rules="validations.req"
+                            :rules="!product.colores[j].imagen_url ? validations.req : []"
                             @change="imageChange(j)"
                           />
                         </v-col>
@@ -322,7 +338,6 @@ export default {
       disableButton: false,
       loadingButton: false,
       product: { ...Product },
-      image: [],
       errorMessage: '',
       categories: [
         {
@@ -416,6 +431,7 @@ export default {
         fr.readAsDataURL(file)
         fr.addEventListener('load', () => {
           this.product.colores[j].url = fr.result
+          this.$forceUpdate()
         })
         return
       }
@@ -441,11 +457,15 @@ export default {
       const colores = form.colores
       if (colores && colores.length) {
         colores.forEach((color, i) => {
-          formData.append(`colores[${i}][file]`, color.file, color?.file?.name)
           formData.append(`colores[${i}][imagen]`, color.imagen)
           formData.append(`colores[${i}][name]`, color.name)
-          console.log('index', i)
-          console.log('file', color?.file?.name)
+          if (!this.editMode) {
+            formData.append(`colores[${i}][file]`, color.file, color?.file?.name)
+          } else {
+            color.id && formData.append(`colores[${i}][id]`, color.id)
+            color.product_id && formData.append(`colores[${i}][product_id]`, color.product_id)
+            color.file && formData.append(`colores[${i}][file]`, color.file, color?.file?.name)
+          }
         })
       }
       // Agregar method put como parametro ya que laravel no detecta formData en method PUT
