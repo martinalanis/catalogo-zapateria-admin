@@ -59,7 +59,7 @@
       :options.sync="options"
       :server-items-length="totalProducts"
       :footer-props="footerProps"
-      sort-by="marca"
+      sort-desc
       show-expand
       single-expand
       class="elevation-2"
@@ -149,6 +149,10 @@ export default {
           value: 'categoria'
         },
         {
+          text: 'Agregado',
+          value: 'created_at'
+        },
+        {
           text: '',
           value: 'id',
           sortable: false
@@ -157,7 +161,7 @@ export default {
       options: {
         page: 1,
         itemsPerPage: 10,
-        sortBy: ['codigo']
+        sortBy: ['created_at']
       },
       footerProps: {
         itemsPerPageOptions: [5, 10, 25, 50]
