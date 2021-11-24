@@ -24,6 +24,9 @@
         </v-btn>
       </v-col>
       <v-col cols="auto">
+        <v-divider vertical></v-divider>
+      </v-col>
+      <v-col cols="auto">
         <upload-file @reloadTable="fetch"/>
       </v-col>
     </v-row>
