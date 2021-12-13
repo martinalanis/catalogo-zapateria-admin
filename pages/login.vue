@@ -22,7 +22,19 @@
               <h3 class="text-center white--text mb-6">
                 PLATAFORMA DE ADMINISTRACIÓN
               </h3>
-              <!-- <h4 class="text--secondary caption text-center mb-6">CATÁLOGO DIGITAL</h4> -->
+              <v-alert
+                v-if="error"
+                color="red"
+                border="left"
+                class="grey lighten-5 text-left"
+                colored-border
+                dense
+                elevation="1"
+                icon="mdi-exclamation"
+                dismissible
+              >
+                Datos incorrectos
+              </v-alert>
               <v-text-field
                 v-model.trim="form.user"
                 label="Teléfono o email"
@@ -63,19 +75,6 @@
               >
                 Ingresar
               </v-btn>
-            </v-col>
-            <v-col v-if="error" cols="12">
-              <v-alert
-                color="red"
-                border="left"
-                class="grey lighten-5"
-                colored-border
-                dense
-                elevation="1"
-                icon="mdi-exclamation"
-              >
-                Datos incorrectos
-              </v-alert>
             </v-col>
           </v-row>
         </v-form>
